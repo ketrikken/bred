@@ -61,7 +61,7 @@ import java.util.List;
             return list;
         }
 
-        public List<String> selectAllID(SQLiteDatabase db, String id) {
+        public List<String> selectFromNames(SQLiteDatabase db, String id) {
             List<String> list = new ArrayList<String>();
 
             String selection = KEY_NAME + " = ?";
@@ -79,6 +79,31 @@ import java.util.List;
             return list;
 
         }
+
+    public List<String> selectAllID(SQLiteDatabase db) {
+        List<String> list = new ArrayList<String>();
+        Cursor cursor = db.query(TABLE_CONTACTS, new String[] { "_id" },
+                null, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                list.add(cursor.getString(0));
+
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return list;
+
+    }
+
+
+        void delFromId(SQLiteDatabase db, String id) {
+            db.delete(TABLE_CONTACTS, KEY_ID + " = ? ", new String[] {id});
+            //db.delete(TABLE_CONTACTS, KEY_ID + "=" + id, null);
+        }
+
     }
 
 

@@ -13,7 +13,12 @@
         android:id="@+id/listOnMainPage"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-
+        android:background="@drawable/selector"> <!--эта строчка подсвечивае серым все-->
+        </ListView>
+     <!--  // android:listSelector="@drawable/selector, выделение при нажатии "
         />
+        //android:divider="@drawable/line" рисунок селектора-->
+
+
 
 </android.support.constraint.ConstraintLayout>

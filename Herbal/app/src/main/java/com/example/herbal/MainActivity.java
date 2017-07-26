@@ -28,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
     DBHelper dbHelper;
     ListView mainList;
     SQLiteDatabase database;
-    ArrayAdapter<String> adapter;
+    ArrayAdapter<String> adapter, adapterID;
+    List<String> listOfNames, listOfId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
                 String value = adapter.getItem(position);
 
+                Toast.makeText(getApplicationContext(), "id: " + position, Toast.LENGTH_LONG).show();
+
                 Intent intent = new Intent(view.getContext(), Main2Activity.class);
                 intent.putExtra("id", /*String.valueOf(id)*/value);
                 startActivity(intent);
@@ -52,15 +55,31 @@ public class MainActivity extends AppCompatActivity {
         database = dbHelper.getReadableDatabase();
         try {
 
-            List<String> list= dbHelper.selectAll(database); //забиваю данные из БД в лист
-            adapter = new ArrayAdapter<String>(this,   R.layout.text, list); //прикручиваю адаптер
+            listOfNames= dbHelper.selectAll(database); //забиваю данные из БД в лист
+            listOfId = dbHelper.selectAllID(database);
+            adapter = new ArrayAdapter<String>(this,   R.layout.text, listOfNames); //прикручиваю адаптер
+            adapterID = new ArrayAdapter<String>(this,   R.layout.text, listOfId); //прикручиваю адаптер
+           // mainList.setAdapter(adapterID);
             mainList.setAdapter(adapter);
         }
         catch(Throwable t) {  //и тут фейл: NullPointerException
             Toast.makeText(getApplicationContext(), "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
         }
 
+      mainList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+          @Override
+          public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
+              String selectedItem = parent.getItemAtPosition(position).toString();
+
+              dbHelper.delFromId(database, listOfId.get(position));
+
+              adapter.remove(selectedItem);
+              adapter.notifyDataSetChanged();
+              listOfId.remove(position);/*удалили элемент из списка*/
+              return true;
+          }
+      });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.btnAdd);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -68,10 +87,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "BD is fill in", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-               // SQLiteDatabase database = dbHelper.getReadableDatabase();
 
                // database.delete(DBHelper.TABLE_CONTACTS, null, null);
-             /*   for(int i = 0; i < 5; ++i){
+               /* for(int i = 0; i < 5; ++i){
                     ContentValues contentValues = new ContentValues();
                     contentValues.put(DBHelper.KEY_NAME, names[i]);
                     contentValues.put(DBHelper.KEY_EMAIL, emails[i]);
@@ -79,7 +97,8 @@ public class MainActivity extends AppCompatActivity {
                     database.insert(DBHelper.TABLE_CONTACTS, null, contentValues);
                 }*/
 ///////////////////////////////////////////////////////////////////////////////////////
-              /*  Cursor cursor = database.query(dbHelper.TABLE_CONTACTS, null, null, null, null, null, null);
+                Cursor cursor = database.query(dbHelper.TABLE_CONTACTS, null, null, null, null, null, null);
+                Log.d("mLog", "-----------------------------------------");
                 if (cursor.moveToFirst()) {
                     int idIndex = cursor.getColumnIndex(DBHelper.KEY_ID);
                     int nameIndex = cursor.getColumnIndex(DBHelper.KEY_NAME);
@@ -92,7 +111,14 @@ public class MainActivity extends AppCompatActivity {
                 } else
                     Log.d("mLog","0 rows");
 
-                cursor.close();*/
+                cursor.close();
+                Log.d("mLog", "-----------------------------------------");
+                for(int i = 0; i < listOfId.size(); ++i)
+                {
+                    Log.d("mLog", listOfId.get(i));
+                }
+
+
             }
         });
 

@@ -26,10 +26,6 @@ public class Main2Activity extends AppCompatActivity {
 
 
         try {
-
-
-
-
             /*long id = Long.parseLong(getIntent().getStringExtra("id")) + 1;*/
             String id = getIntent().getStringExtra("id");
             Toast.makeText(getApplicationContext(), "id: " + id, Toast.LENGTH_LONG).show();
@@ -38,7 +34,7 @@ public class Main2Activity extends AppCompatActivity {
             database = dbHelper.getReadableDatabase();
 
 
-            List<String> list = dbHelper.selectAllID(database, id); //забиваю данные из БД в лист
+            List<String> list = dbHelper.selectFromNames(database, id); //забиваю данные из БД в лист
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.text, list); //прикручиваю адаптер
             listView.setAdapter(adapter);
 
