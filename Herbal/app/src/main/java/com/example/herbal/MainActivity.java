@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -25,10 +27,13 @@ public class MainActivity extends AppCompatActivity {
             "Костя", "Игорь", "Анна", "Денис", "Андрей" };
     String[] emails = { "Иван1", "Марья2", "Петр3", "Антон5", "Даша55", "Борис",
             "Костя", "Игорь", "Анна", "Денис", "Андрей" };
+
+    SimpleCursorAdapter adapter;
+    Cursor cursor;
     DBHelper dbHelper;
     ListView mainList;
     SQLiteDatabase database;
-    ArrayAdapter<String> adapter, adapterID;
+
     List<String> listOfNames, listOfId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,46 +42,47 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        dbHelper = new DBHelper(this);
+        database = dbHelper.getReadableDatabase();
+
+        // получаем курсор
+        cursor = dbHelper.getAllData(database);
+        startManagingCursor(cursor);
+
+
+        // формируем столбцы сопоставления
+        String[] from = new String[] { dbHelper.KEY_NAME};
+        int[] to = new int[] { R.id.textText};
+
+
+
+        // создааем адаптер и настраиваем список
+        adapter = new SimpleCursorAdapter(this, R.layout.text, cursor, from, to);
         mainList =(ListView)findViewById(R.id.listOnMainPage);
+        mainList.setAdapter(adapter);
+
         mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                String value = adapter.getItem(position);
+                String value = ((TextView) view.findViewById(R.id.textText)).getText().toString();
 
-                Toast.makeText(getApplicationContext(), "id: " + position, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "value: " + value, Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(view.getContext(), Main2Activity.class);
-                intent.putExtra("id", /*String.valueOf(id)*/value);
+                intent.putExtra("id", value);
                 startActivity(intent);
             }
         });
-        dbHelper = new DBHelper(this);
-        database = dbHelper.getReadableDatabase();
-        try {
 
-            listOfNames= dbHelper.selectAll(database); //забиваю данные из БД в лист
-            listOfId = dbHelper.selectAllID(database);
-            adapter = new ArrayAdapter<String>(this,   R.layout.text, listOfNames); //прикручиваю адаптер
-            adapterID = new ArrayAdapter<String>(this,   R.layout.text, listOfId); //прикручиваю адаптер
-           // mainList.setAdapter(adapterID);
-            mainList.setAdapter(adapter);
-        }
-        catch(Throwable t) {  //и тут фейл: NullPointerException
-            Toast.makeText(getApplicationContext(), "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
-        }
 
       mainList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
           @Override
           public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-              String selectedItem = parent.getItemAtPosition(position).toString();
-
-              dbHelper.delFromId(database, listOfId.get(position));
-
-              adapter.remove(selectedItem);
-              adapter.notifyDataSetChanged();
-              listOfId.remove(position);/*удалили элемент из списка*/
+              Toast.makeText(getApplicationContext(), Long.toString(id), Toast.LENGTH_LONG).show();
+              dbHelper.delFromId(database, id);
+              cursor.requery();
               return true;
           }
       });
@@ -89,34 +95,31 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
 
                // database.delete(DBHelper.TABLE_CONTACTS, null, null);
-               /* for(int i = 0; i < 5; ++i){
+               /* for(int i = 0; i < 11; ++i){
                     ContentValues contentValues = new ContentValues();
                     contentValues.put(DBHelper.KEY_NAME, names[i]);
                     contentValues.put(DBHelper.KEY_EMAIL, emails[i]);
 
                     database.insert(DBHelper.TABLE_CONTACTS, null, contentValues);
-                }*/
+                }
+                cursor.requery();*/
 ///////////////////////////////////////////////////////////////////////////////////////
-                Cursor cursor = database.query(dbHelper.TABLE_CONTACTS, null, null, null, null, null, null);
+                Cursor cursorr = database.query(dbHelper.TABLE_CONTACTS, null, null, null, null, null, null);
                 Log.d("mLog", "-----------------------------------------");
-                if (cursor.moveToFirst()) {
-                    int idIndex = cursor.getColumnIndex(DBHelper.KEY_ID);
-                    int nameIndex = cursor.getColumnIndex(DBHelper.KEY_NAME);
-                    int emailIndex = cursor.getColumnIndex(DBHelper.KEY_EMAIL);
+                if (cursorr.moveToFirst()) {
+                    int idIndex = cursorr.getColumnIndex(DBHelper.KEY_ID);
+                    int nameIndex = cursorr.getColumnIndex(DBHelper.KEY_NAME);
+                    int emailIndex = cursorr.getColumnIndex(DBHelper.KEY_EMAIL);
                     do {
-                        Log.d("mLog", "ID = " + cursor.getInt(idIndex) +
-                                ", name = " + cursor.getString(nameIndex) +
-                                ", email = " + cursor.getString(emailIndex));
-                    } while (cursor.moveToNext());
+                        Log.d("mLog", "ID = " + cursorr.getInt(idIndex) +
+                                ", name = " + cursorr.getString(nameIndex) +
+                                ", email = " + cursorr.getString(emailIndex));
+                    } while (cursorr.moveToNext());
                 } else
                     Log.d("mLog","0 rows");
 
-                cursor.close();
-                Log.d("mLog", "-----------------------------------------");
-                for(int i = 0; i < listOfId.size(); ++i)
-                {
-                    Log.d("mLog", listOfId.get(i));
-                }
+                cursorr.close();
+
 
 
             }

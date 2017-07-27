@@ -98,10 +98,13 @@ import java.util.List;
 
     }
 
-
-        void delFromId(SQLiteDatabase db, String id) {
-            db.delete(TABLE_CONTACTS, KEY_ID + " = ? ", new String[] {id});
-            //db.delete(TABLE_CONTACTS, KEY_ID + "=" + id, null);
+         // получить все данные из таблицы DB_TABLE
+        Cursor getAllData(SQLiteDatabase db) {
+            return db.query(TABLE_CONTACTS, null, null, null, null, null, null);
+        }
+        void delFromId(SQLiteDatabase db, long id) {
+           // db.delete(TABLE_CONTACTS, KEY_ID + " = ? ", new String[] {id});
+            db.delete(TABLE_CONTACTS, KEY_ID + " = " + id, null);
         }
 
     }
