@@ -13,8 +13,7 @@ import java.util.List;
 
 public class Main2Activity extends AppCompatActivity {
 
-    DBHelper dbHelper;
-    SQLiteDatabase database;
+    Database db;
     ListView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,15 +25,15 @@ public class Main2Activity extends AppCompatActivity {
 
 
         try {
-            /*long id = Long.parseLong(getIntent().getStringExtra("id")) + 1;*/
+
             String id = getIntent().getStringExtra("id");
             Toast.makeText(getApplicationContext(), "id: " + id, Toast.LENGTH_LONG).show();
 
-            dbHelper = new DBHelper(this);
-            database = dbHelper.getReadableDatabase();
+            db = new Database(this);
+            db.open();
 
 
-            List<String> list = dbHelper.selectFromNames(database, id); //забиваю данные из БД в лист
+            List<String> list = db.selectFromNames(id); //забиваю данные из БД в лист
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.text, list); //прикручиваю адаптер
             listView.setAdapter(adapter);
 
@@ -44,5 +43,10 @@ public class Main2Activity extends AppCompatActivity {
             Log.d("mLog", "Exception: " + t.toString());
         }
 
+    }
+    protected void onDestroy() {
+        super.onDestroy();
+        // закрываем подключение при выходе
+        db.close();
     }
 }

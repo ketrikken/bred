@@ -1,12 +1,16 @@
 package com.example.herbal;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -21,18 +25,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity {
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+
+
+
+
+
+public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<Cursor>{
     String[] names = { "Иван", "Марья", "Петр", "Антон", "Даша", "Борис",
             "Костя", "Игорь", "Анна", "Денис", "Андрей" };
     String[] emails = { "Иван1", "Марья2", "Петр3", "Антон5", "Даша55", "Борис",
             "Костя", "Игорь", "Анна", "Денис", "Андрей" };
 
-    SimpleCursorAdapter adapter;
+    android.widget.SimpleCursorAdapter adapter;
     Cursor cursor;
-    DBHelper dbHelper;
     ListView mainList;
-    SQLiteDatabase database;
+    Database db;
 
     List<String> listOfNames, listOfId;
     @Override
@@ -42,24 +52,24 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        dbHelper = new DBHelper(this);
-        database = dbHelper.getReadableDatabase();
-
+        db = new Database(this);
+        db.open();
         // получаем курсор
-        cursor = dbHelper.getAllData(database);
+        cursor = db.getAllData();
         startManagingCursor(cursor);
 
 
         // формируем столбцы сопоставления
-        String[] from = new String[] { dbHelper.KEY_NAME};
+        String[] from = new String[] { DBHelper.KEY_NAME};
         int[] to = new int[] { R.id.textText};
 
-
-
         // создааем адаптер и настраиваем список
-        adapter = new SimpleCursorAdapter(this, R.layout.text, cursor, from, to);
+        adapter = new android.widget.SimpleCursorAdapter(this, R.layout.text, cursor, from, to);
         mainList =(ListView)findViewById(R.id.listOnMainPage);
         mainList.setAdapter(adapter);
+
+        getSupportLoaderManager().initLoader(0, null, this);
+
 
         mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -81,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
           public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
               Toast.makeText(getApplicationContext(), Long.toString(id), Toast.LENGTH_LONG).show();
-              dbHelper.delFromId(database, id);
+              db.delFromId(id);
               cursor.requery();
               return true;
           }
@@ -103,28 +113,11 @@ public class MainActivity extends AppCompatActivity {
                     database.insert(DBHelper.TABLE_CONTACTS, null, contentValues);
                 }
                 cursor.requery();*/
-///////////////////////////////////////////////////////////////////////////////////////
-                Cursor cursorr = database.query(dbHelper.TABLE_CONTACTS, null, null, null, null, null, null);
-                Log.d("mLog", "-----------------------------------------");
-                if (cursorr.moveToFirst()) {
-                    int idIndex = cursorr.getColumnIndex(DBHelper.KEY_ID);
-                    int nameIndex = cursorr.getColumnIndex(DBHelper.KEY_NAME);
-                    int emailIndex = cursorr.getColumnIndex(DBHelper.KEY_EMAIL);
-                    do {
-                        Log.d("mLog", "ID = " + cursorr.getInt(idIndex) +
-                                ", name = " + cursorr.getString(nameIndex) +
-                                ", email = " + cursorr.getString(emailIndex));
-                    } while (cursorr.moveToNext());
-                } else
-                    Log.d("mLog","0 rows");
 
-                cursorr.close();
-
-
+              db.PrintAll();
 
             }
         });
-
 
     }
 
@@ -149,6 +142,49 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    protected void onDestroy() {
+        super.onDestroy();
+        // закрываем подключение при выходе
+        db.close();
+    }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
+        return new MyCursorLoader(this, db);
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        adapter.swapCursor(cursor);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+    static class MyCursorLoader extends android.support.v4.content.CursorLoader{
+
+        Database db;
+
+        public MyCursorLoader(Context context, Database db) {
+            super(context);
+            this.db = db;
+        }
+
+        @Override
+        public Cursor loadInBackground() {
+            //return super.loadInBackground();
+            Cursor cursor = db.getAllData();
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return cursor;
+        }
+
+    }
 }

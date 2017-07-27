@@ -24,10 +24,12 @@ import java.util.List;
         public static final String KEY_EMAIL = "email";
 
 
-        public DBHelper(Context context) {
+       /* public DBHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        }*/
+        public DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+            super(context, name, factory, version);
         }
-
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("create table " + TABLE_CONTACTS + "(" +
@@ -42,71 +44,6 @@ import java.util.List;
             db.execSQL("drop table if exists " + TABLE_CONTACTS);
             onCreate(db);
         }
-
-
-        public List<String> selectAll(SQLiteDatabase db) {
-            List<String> list = new ArrayList<String>();
-            Cursor cursor = db.query(TABLE_CONTACTS, new String[] { "name" },
-                    null, null, null, null, null);
-
-            if (cursor.moveToFirst()) {
-                do {
-                    list.add(cursor.getString(0));
-
-                } while (cursor.moveToNext());
-            }
-            if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
-            }
-            return list;
-        }
-
-        public List<String> selectFromNames(SQLiteDatabase db, String id) {
-            List<String> list = new ArrayList<String>();
-
-            String selection = KEY_NAME + " = ?";
-            String[] selectionArgs =  new String[]{ /*String.valueOf(id)*/ id};
-            Cursor c = db.query(TABLE_CONTACTS, new String[] { KEY_NAME }, selection, selectionArgs, null, null, null);
-            if (c.moveToFirst()) {
-                do {
-                    list.add(c.getString(0));
-
-                } while (c.moveToNext());
-            }
-            if (c != null && !c.isClosed()) {
-                c.close();
-            }
-            return list;
-
-        }
-
-    public List<String> selectAllID(SQLiteDatabase db) {
-        List<String> list = new ArrayList<String>();
-        Cursor cursor = db.query(TABLE_CONTACTS, new String[] { "_id" },
-                null, null, null, null, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                list.add(cursor.getString(0));
-
-            } while (cursor.moveToNext());
-        }
-        if (cursor != null && !cursor.isClosed()) {
-            cursor.close();
-        }
-        return list;
-
-    }
-
-         // получить все данные из таблицы DB_TABLE
-        Cursor getAllData(SQLiteDatabase db) {
-            return db.query(TABLE_CONTACTS, null, null, null, null, null, null);
-        }
-        void delFromId(SQLiteDatabase db, long id) {
-           // db.delete(TABLE_CONTACTS, KEY_ID + " = ? ", new String[] {id});
-            db.delete(TABLE_CONTACTS, KEY_ID + " = " + id, null);
-        }
-
     }
 
 
