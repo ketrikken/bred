@@ -71,6 +71,12 @@ public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<
         getSupportLoaderManager().initLoader(0, null, this);
 
 
+        MainListFunction();
+        FAB();
+
+
+    }
+    private void MainListFunction(){
         mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -86,17 +92,18 @@ public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<
         });
 
 
-      mainList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-          @Override
-          public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        mainList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-              Toast.makeText(getApplicationContext(), Long.toString(id), Toast.LENGTH_LONG).show();
-              db.delFromId(id);
-              cursor.requery();
-              return true;
-          }
-      });
-
+                Toast.makeText(getApplicationContext(), Long.toString(id), Toast.LENGTH_LONG).show();
+                db.delFromId(id);
+                cursor.requery();
+                return true;
+            }
+        });
+    }
+    private void FAB(){
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.btnAdd);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,21 +111,14 @@ public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<
                 Snackbar.make(view, "BD is fill in", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
 
-               // database.delete(DBHelper.TABLE_CONTACTS, null, null);
-               /* for(int i = 0; i < 11; ++i){
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put(DBHelper.KEY_NAME, names[i]);
-                    contentValues.put(DBHelper.KEY_EMAIL, emails[i]);
-
-                    database.insert(DBHelper.TABLE_CONTACTS, null, contentValues);
+                for(int i = 0; i < 11; ++i){
+                    db.addRec(names[i], emails[i]);
                 }
-                cursor.requery();*/
-
-              db.PrintAll();
+                cursor.requery();
+                db.PrintAll();
 
             }
         });
-
     }
 
     @Override
@@ -150,9 +150,7 @@ public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-
         return new MyCursorLoader(this, db);
-
     }
 
     @Override
@@ -162,7 +160,6 @@ public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-
     }
 
     static class MyCursorLoader extends android.support.v4.content.CursorLoader{
@@ -178,11 +175,6 @@ public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<
         public Cursor loadInBackground() {
             //return super.loadInBackground();
             Cursor cursor = db.getAllData();
-            try {
-                TimeUnit.SECONDS.sleep(3);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             return cursor;
         }
 

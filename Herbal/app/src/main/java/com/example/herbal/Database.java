@@ -1,5 +1,6 @@
 package com.example.herbal;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -114,6 +115,12 @@ public class Database {
 
         cursorr.close();
     }
-
+    // добавить запись в DB_TABLE
+    public void addRec(String name, String email) {
+        ContentValues cv = new ContentValues();
+        cv.put(DBHelper.KEY_NAME, name);
+        cv.put(DBHelper.KEY_EMAIL, email);
+        db.insert(DBHelper.TABLE_CONTACTS, null, cv);
+    }
 
 }
