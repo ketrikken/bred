@@ -33,7 +33,6 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
             case R.id.buttonList:
                 intent = new Intent(v.getContext(), MainActivity.class);
                 startActivity(intent);
-                Toast.makeText(getApplicationContext(), "нажали list", Toast.LENGTH_LONG).show();
                 break;
         }
     }
