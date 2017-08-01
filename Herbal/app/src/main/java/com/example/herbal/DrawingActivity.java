@@ -16,16 +16,22 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
 
 public class DrawingActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnTouchListener {
 
 
-    private ImageView mImageView;
-    private ViewGroup mMoveLayout;
-    private int mX;
-    private int mY;
-
+    private int idd;
+    //private ViewGroup mMoveLayout;
+    private RelativeLayout mMoveLayout;
+  //  private RelativeLayout.LayoutParams layoutParams;
+    private ArrayList<Ppopa> listImView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,17 +40,16 @@ public class DrawingActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        idd = 0;
+        listImView = new ArrayList<Ppopa>();
+
         //Связываемся с нашими объектами, определяя изображение через заданный ViewGroup:
-        mMoveLayout = (ViewGroup) findViewById(R.id.drawingGreed);
-
+        //mMoveLayout = (ViewGroup) findViewById(R.id.drawingGreed);
+        mMoveLayout = (RelativeLayout) findViewById(R.id.drawingGreed);
         //Создаем программно RelativeLayout с параметрами 100*100:
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 100);
+        //layoutParams = new RelativeLayout.LayoutParams(100, 100);
 
-
-
-        //И настраиваем ему слушателя (обработчик) прикосновений:
-
-        OnTLisToRalLayout(layoutParams);
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -66,43 +71,6 @@ public class DrawingActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    void OnTLisToRalLayout( RelativeLayout.LayoutParams layoutParams)
-    {
-        mImageView = (ImageView) mMoveLayout.findViewById(R.id.ImageView);
-
-        //Применяем эти параметры к нашему изображению:
-        mImageView.setLayoutParams(layoutParams);
-        mImageView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int X = (int) event.getRawX();
-                final int Y = (int) event.getRawY();
-
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
-
-                    //ACTION_DOWN срабатывает при прикосновении к экрану,
-                    //здесь определяется начальное стартовое положение объекта:
-                    case MotionEvent.ACTION_DOWN:
-                        RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
-                        mX = X - lParams.leftMargin;
-                        mY = Y - lParams.topMargin;
-                        break;
-
-                    //ACTION_MOVE обрабатывает случившиеся в процессе прикосновения изменения, здесь
-                    //содержится информация о последней точке, где находится объект после окончания действия прикосновения ACTION_DOWN:
-                    case MotionEvent.ACTION_MOVE:
-                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
-                        layoutParams.leftMargin = X - mX;
-                        layoutParams.topMargin = Y - mY;
-                        layoutParams.rightMargin = 0 - 250;
-                        layoutParams.bottomMargin = 0 -250;
-                        v.setLayoutParams(layoutParams);
-                        break;
-                }
-                return true;
-            }
-        });
-    }
 
 
     @Override
@@ -145,6 +113,16 @@ public class DrawingActivity extends AppCompatActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 100);
+            View view = getLayoutInflater().inflate(R.layout.im_view, null);
+            view.setLayoutParams(layoutParams);
+
+            (view.findViewById(R.id.imm)).setId(idd);
+            listImView.add(new Ppopa(view));
+            mMoveLayout.addView(view);
+            view.setOnTouchListener(this);
+            Toast.makeText(getApplicationContext(), "id: " + view.getId(), Toast.LENGTH_SHORT).show();
+            idd++;
 
         } else if (id == R.id.nav_gallery) {
 
@@ -164,12 +142,36 @@ public class DrawingActivity extends AppCompatActivity
     }
 
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        int id = v.getId();
+
+        int X = (int) event.getRawX();
+        int Y = (int) event.getRawY();
+
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
+            //ACTION_DOWN срабатывает при прикосновении к экрану,
+            //здесь определяется начальное стартовое положение объекта:
+            case MotionEvent.ACTION_DOWN:
+                RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
+                listImView.get(id).xx = X - lParams.leftMargin;
+                listImView.get(id).yy = Y - lParams.topMargin;
+                break;
+
+            //ACTION_MOVE обрабатывает случившиеся в процессе прикосновения изменения, здесь
+            //содержится информация о последней точке, где находится объект после окончания действия прикосновения ACTION_DOWN:
+            case MotionEvent.ACTION_MOVE:
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
+                layoutParams.leftMargin = X - listImView.get(id).xx;
+                layoutParams.topMargin = Y - listImView.get(id).yy;
+                layoutParams.rightMargin = 0 - 250;
+                layoutParams.bottomMargin = 0 -250;
+                v.setLayoutParams(layoutParams);
+                break;
+        }
+        return true;
 
 
-
-
-
-
-
-
+    }
 }
