@@ -159,17 +159,10 @@ public class DrawingActivity extends AppCompatActivity
                 mapView.get(id).yy = Y - lParams.topMargin;
 
 
-                xx = (int)v.getX();
-                yy = (int)v.getY();
-
-                topY = ImDel.getTop() - 20;
-                leftX = ImDel.getLeft() - 20;
-                rightX = ImDel.getRight() + 20;
-                bottomY = ImDel.getBottom() + 20;
-
-
-
-
+                topY = ImDel.getTop();
+                leftX = ImDel.getLeft();
+                rightX = ImDel.getRight();
+                bottomY = ImDel.getBottom();
 
                 break;
 
@@ -179,14 +172,11 @@ public class DrawingActivity extends AppCompatActivity
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
                 layoutParams.leftMargin = X - mapView.get(id).xx;
                 layoutParams.topMargin = Y - mapView.get(id).yy;
-                layoutParams.rightMargin = 0 - 250;
-                layoutParams.bottomMargin = 0 -250;
                 v.setLayoutParams(layoutParams);
-
-                if (  xx >= leftX && xx <= rightX && yy >= topY && yy <= bottomY) {
+                xx = v.getRight();
+                yy = v.getTop();
+                if (  xx >= leftX && yy <= bottomY) {
                     try {
-                        Toast.makeText(this, leftX + " " + bottomY + " " + rightX + " " + topY + " робот " + xx+ " " + yy, Toast.LENGTH_SHORT).show();
-
                         //получаем родительский view и удаляем его
                         ((RelativeLayout) v.getParent()).removeView(v);
                         //удаляем эту же запись из массива что бы не оставалось мертвых записей
@@ -197,14 +187,8 @@ public class DrawingActivity extends AppCompatActivity
                 }
 
                 break;
-            case MotionEvent.ACTION_UP:
-                Toast.makeText(this, leftX + " " + bottomY + " " + rightX + " " + topY + " робот " + xx+ " " + yy, Toast.LENGTH_SHORT).show();
 
-
-
-                break;
         }
-
         return true;
 
 
