@@ -8,15 +8,20 @@
     tools:context="com.example.herbal.DrawingActivity"
     tools:showIn="@layout/app_bar_drawing">
 
+
+
     <RelativeLayout
         android:id="@+id/drawingGreed"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-       <!-- <ImageView
-            android:id="@+id/ImageView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <ImageView
+            android:id="@+id/imageDel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:src="@mipmap/ic_launcher" />-->
+            android:layout_alignParentRight = "true"
+            android:layout_weight="1"
+            app:srcCompat="@android:drawable/ic_delete" />
+
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

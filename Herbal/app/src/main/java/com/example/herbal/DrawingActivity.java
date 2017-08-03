@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -26,12 +27,12 @@ import java.util.List;
 public class DrawingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnTouchListener {
 
-
-    private int idd;
-    //private ViewGroup mMoveLayout;
+    private int xx, yy;
+    private ImageView ImDel;
+    private Integer idd;
     private RelativeLayout mMoveLayout;
-  //  private RelativeLayout.LayoutParams layoutParams;
-    private ArrayList<Ppopa> listImView;
+    private HashMap<Integer, Ppopa> mapView;
+    private int topY, leftX, rightX, bottomY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +43,11 @@ public class DrawingActivity extends AppCompatActivity
 
 
         idd = 0;
-        listImView = new ArrayList<Ppopa>();
+        mapView = new HashMap<Integer, Ppopa>();
+        ImDel = (ImageView) findViewById(R.id.imageDel);
 
-        //Связываемся с нашими объектами, определяя изображение через заданный ViewGroup:
-        //mMoveLayout = (ViewGroup) findViewById(R.id.drawingGreed);
         mMoveLayout = (RelativeLayout) findViewById(R.id.drawingGreed);
-        //Создаем программно RelativeLayout с параметрами 100*100:
-        //layoutParams = new RelativeLayout.LayoutParams(100, 100);
+
 
 
 
@@ -118,7 +117,7 @@ public class DrawingActivity extends AppCompatActivity
             view.setLayoutParams(layoutParams);
 
             (view.findViewById(R.id.imm)).setId(idd);
-            listImView.add(new Ppopa(view));
+            mapView.put(idd, new Ppopa(view));
             mMoveLayout.addView(view);
             view.setOnTouchListener(this);
             Toast.makeText(getApplicationContext(), "id: " + view.getId(), Toast.LENGTH_SHORT).show();
@@ -148,28 +147,64 @@ public class DrawingActivity extends AppCompatActivity
 
         int X = (int) event.getRawX();
         int Y = (int) event.getRawY();
-
+        v.bringToFront();
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
+
 
             //ACTION_DOWN срабатывает при прикосновении к экрану,
             //здесь определяется начальное стартовое положение объекта:
             case MotionEvent.ACTION_DOWN:
                 RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
-                listImView.get(id).xx = X - lParams.leftMargin;
-                listImView.get(id).yy = Y - lParams.topMargin;
+                mapView.get(id).xx = X - lParams.leftMargin;
+                mapView.get(id).yy = Y - lParams.topMargin;
+
+
+                xx = (int)v.getX();
+                yy = (int)v.getY();
+
+                topY = ImDel.getTop() - 20;
+                leftX = ImDel.getLeft() - 20;
+                rightX = ImDel.getRight() + 20;
+                bottomY = ImDel.getBottom() + 20;
+
+
+
+
+
                 break;
 
             //ACTION_MOVE обрабатывает случившиеся в процессе прикосновения изменения, здесь
             //содержится информация о последней точке, где находится объект после окончания действия прикосновения ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
-                layoutParams.leftMargin = X - listImView.get(id).xx;
-                layoutParams.topMargin = Y - listImView.get(id).yy;
+                layoutParams.leftMargin = X - mapView.get(id).xx;
+                layoutParams.topMargin = Y - mapView.get(id).yy;
                 layoutParams.rightMargin = 0 - 250;
                 layoutParams.bottomMargin = 0 -250;
                 v.setLayoutParams(layoutParams);
+
+                if (  xx >= leftX && xx <= rightX && yy >= topY && yy <= bottomY) {
+                    try {
+                        Toast.makeText(this, leftX + " " + bottomY + " " + rightX + " " + topY + " робот " + xx+ " " + yy, Toast.LENGTH_SHORT).show();
+
+                        //получаем родительский view и удаляем его
+                        ((RelativeLayout) v.getParent()).removeView(v);
+                        //удаляем эту же запись из массива что бы не оставалось мертвых записей
+                        mapView.remove(id);
+                    } catch(IndexOutOfBoundsException ex) {
+                        Toast.makeText(this, "не удалилось", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                break;
+            case MotionEvent.ACTION_UP:
+                Toast.makeText(this, leftX + " " + bottomY + " " + rightX + " " + topY + " робот " + xx+ " " + yy, Toast.LENGTH_SHORT).show();
+
+
+
                 break;
         }
+
         return true;
 
 
