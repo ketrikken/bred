@@ -1,5 +1,6 @@
 package com.example.herbal;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import android.widget.ZoomButtonsController;
+import android.widget.ZoomControls;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,14 +28,16 @@ import java.util.List;
 
 
 public class DrawingActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnTouchListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnTouchListener, View.OnClickListener{
 
     private int xx, yy;
+    private Integer markIdImage;
     private ImageView ImDel;
     private Integer idd;
     private RelativeLayout mMoveLayout;
     private HashMap<Integer, Ppopa> mapView;
     private int topY, leftX, rightX, bottomY;
+    private ZoomControls zoomBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +45,47 @@ public class DrawingActivity extends AppCompatActivity
         setContentView(R.layout.activity_drawing);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        markIdImage = -250;
+
+        zoomBtn = (ZoomControls) findViewById(R.id.btnZoom);
+        zoomBtn.setOnZoomInClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (markIdImage == -250){
+                    Toast.makeText(getApplicationContext(), "объект не выбран", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Toast.makeText(getApplicationContext(), Integer.toString(markIdImage), Toast.LENGTH_SHORT).show();
+                float x = mapView.get(markIdImage).view.getScaleX();
+                float y = mapView.get(markIdImage).view.getScaleY();
+
+                mapView.get(markIdImage).view.setScaleX((float) (x+0.1));
+                mapView.get(markIdImage).view.setScaleY((float) (y+0.1));
+            }
+        });
+
+        zoomBtn.setOnZoomOutClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (markIdImage == -250){
+                    Toast.makeText(getApplicationContext(), "объект не выбран", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                float x = mapView.get(markIdImage).view.getScaleX();
+                float y = mapView.get(markIdImage).view.getScaleY();
+
+                if (x - 0.1 > 0){
+
+                    mapView.get(markIdImage).view.setScaleX((float) (x-0.1));
+                    mapView.get(markIdImage).view.setScaleY((float) (y-0.1));
+                }
+            }
+        });
+
+
+
 
 
         idd = 0;
@@ -50,15 +96,6 @@ public class DrawingActivity extends AppCompatActivity
 
 
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -119,7 +156,11 @@ public class DrawingActivity extends AppCompatActivity
             (view.findViewById(R.id.imm)).setId(idd);
             mapView.put(idd, new Ppopa(view));
             mMoveLayout.addView(view);
+
+            view.setOnClickListener(this);
             view.setOnTouchListener(this);
+
+
             Toast.makeText(getApplicationContext(), "id: " + view.getId(), Toast.LENGTH_SHORT).show();
             idd++;
 
@@ -158,7 +199,6 @@ public class DrawingActivity extends AppCompatActivity
                 mapView.get(id).xx = X - lParams.leftMargin;
                 mapView.get(id).yy = Y - lParams.topMargin;
 
-
                 topY = ImDel.getTop();
                 leftX = ImDel.getLeft();
                 rightX = ImDel.getRight();
@@ -172,10 +212,12 @@ public class DrawingActivity extends AppCompatActivity
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
                 layoutParams.leftMargin = X - mapView.get(id).xx;
                 layoutParams.topMargin = Y - mapView.get(id).yy;
+                layoutParams.bottomMargin = 0 - (int)1e5 ;
+                layoutParams.rightMargin = 0 - (int)1e5 ;
                 v.setLayoutParams(layoutParams);
                 xx = v.getRight();
                 yy = v.getTop();
-                if (  xx >= leftX && yy <= bottomY) {
+                if (  xx > leftX && yy < bottomY) {
                     try {
                         //получаем родительский view и удаляем его
                         ((RelativeLayout) v.getParent()).removeView(v);
@@ -189,8 +231,27 @@ public class DrawingActivity extends AppCompatActivity
                 break;
 
         }
-        return true;
+        return false;
 
+
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (markIdImage == id){
+            mapView.get(id).view.setBackgroundColor(Color.GRAY);
+            markIdImage = -250;
+            return;
+        } else if (markIdImage != -250){
+            mapView.get(markIdImage).view.setBackgroundColor(Color.GRAY);
+            markIdImage = id;
+            mapView.get(id).view.setBackgroundColor(Color.RED);
+        }else{
+            markIdImage = id;
+            mapView.get(id).view.setBackgroundColor(Color.RED);
+        }
 
     }
 }

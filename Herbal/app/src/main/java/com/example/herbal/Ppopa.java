@@ -15,5 +15,5 @@ public class Ppopa {
        yy = 0;
    }
     public int xx, yy;
-    private View view;
+    public View view;
 }
