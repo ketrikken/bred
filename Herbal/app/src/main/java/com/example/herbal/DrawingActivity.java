@@ -2,8 +2,7 @@ package com.example.herbal;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.util.SparseArrayCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -14,29 +13,25 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import android.widget.ZoomButtonsController;
 import android.widget.ZoomControls;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+
 
 
 
 public class DrawingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnTouchListener, View.OnClickListener{
 
-    private int xx, yy;
+
     private Integer markIdImage;
     private ImageView ImDel;
     private Integer idd;
     private RelativeLayout mMoveLayout;
-    private HashMap<Integer, Ppopa> mapView;
-    private int topY, leftX, rightX, bottomY;
+    private SparseArrayCompat< Ppopa> mapView;
+    private int leftX, bottomY;
     private ZoomControls zoomBtn;
 
     @Override
@@ -48,16 +43,33 @@ public class DrawingActivity extends AppCompatActivity
 
 
         markIdImage = -250;
-
         zoomBtn = (ZoomControls) findViewById(R.id.btnZoom);
+        ZoomClicks();
+        idd = 0;
+        mapView = new SparseArrayCompat<Ppopa>();
+        ImDel = (ImageView) findViewById(R.id.imageDel);
+        mMoveLayout = (RelativeLayout) findViewById(R.id.drawingGreed);
+
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void ZoomClicks(){
         zoomBtn.setOnZoomInClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (markIdImage == -250){
+                if (mapView.get(markIdImage) == null){
                     Toast.makeText(getApplicationContext(), "объект не выбран", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Toast.makeText(getApplicationContext(), Integer.toString(markIdImage), Toast.LENGTH_SHORT).show();
+
                 float x = mapView.get(markIdImage).view.getScaleX();
                 float y = mapView.get(markIdImage).view.getScaleY();
 
@@ -69,7 +81,7 @@ public class DrawingActivity extends AppCompatActivity
         zoomBtn.setOnZoomOutClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (markIdImage == -250){
+                if (mapView.get(markIdImage) == null){
                     Toast.makeText(getApplicationContext(), "объект не выбран", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -83,31 +95,7 @@ public class DrawingActivity extends AppCompatActivity
                 }
             }
         });
-
-
-
-
-
-        idd = 0;
-        mapView = new HashMap<Integer, Ppopa>();
-        ImDel = (ImageView) findViewById(R.id.imageDel);
-
-        mMoveLayout = (RelativeLayout) findViewById(R.id.drawingGreed);
-
-
-
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
     }
-
-
 
     @Override
     public void onBackPressed() {
@@ -164,16 +152,6 @@ public class DrawingActivity extends AppCompatActivity
             Toast.makeText(getApplicationContext(), "id: " + view.getId(), Toast.LENGTH_SHORT).show();
             idd++;
 
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -185,7 +163,7 @@ public class DrawingActivity extends AppCompatActivity
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         int id = v.getId();
-
+        int xx, yy;
         int X = (int) event.getRawX();
         int Y = (int) event.getRawY();
         v.bringToFront();
@@ -199,9 +177,8 @@ public class DrawingActivity extends AppCompatActivity
                 mapView.get(id).xx = X - lParams.leftMargin;
                 mapView.get(id).yy = Y - lParams.topMargin;
 
-                topY = ImDel.getTop();
+
                 leftX = ImDel.getLeft();
-                rightX = ImDel.getRight();
                 bottomY = ImDel.getBottom();
 
                 break;
@@ -240,17 +217,17 @@ public class DrawingActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         int id = v.getId();
+
         if (markIdImage == id){
-            mapView.get(id).view.setBackgroundColor(Color.GRAY);
+            mapView.get(id).view.setBackgroundColor(Color.TRANSPARENT);
             markIdImage = -250;
-            return;
-        } else if (markIdImage != -250){
-            mapView.get(markIdImage).view.setBackgroundColor(Color.GRAY);
+        } else if (mapView.get(markIdImage) != null){
+            mapView.get(markIdImage).view.setBackgroundColor(Color.TRANSPARENT);
             markIdImage = id;
-            mapView.get(id).view.setBackgroundColor(Color.RED);
+            mapView.get(id).view.setBackgroundColor(Color.parseColor("#ff64c2f4"));
         }else{
             markIdImage = id;
-            mapView.get(id).view.setBackgroundColor(Color.RED);
+            mapView.get(id).view.setBackgroundColor(Color.parseColor("#ff64c2f4"));
         }
 
     }
