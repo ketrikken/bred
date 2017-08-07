@@ -1,6 +1,11 @@
 package com.example.herbal;
 
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.util.SparseArrayCompat;
 import android.view.MotionEvent;
@@ -65,8 +70,7 @@ public class DrawingActivity extends AppCompatActivity
         zoomBtn.setOnZoomInClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mapView.get(markIdImage) == null){
-                    Toast.makeText(getApplicationContext(), "объект не выбран", Toast.LENGTH_SHORT).show();
+                if (!IsInMap()){
                     return;
                 }
 
@@ -81,8 +85,7 @@ public class DrawingActivity extends AppCompatActivity
         zoomBtn.setOnZoomOutClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mapView.get(markIdImage) == null){
-                    Toast.makeText(getApplicationContext(), "объект не выбран", Toast.LENGTH_SHORT).show();
+                if (!IsInMap()){
                     return;
                 }
                 float x = mapView.get(markIdImage).view.getScaleX();
@@ -136,27 +139,54 @@ public class DrawingActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 100);
-            View view = getLayoutInflater().inflate(R.layout.im_view, null);
-            view.setLayoutParams(layoutParams);
+            NavCamera();
 
-            (view.findViewById(R.id.imm)).setId(idd);
-            mapView.put(idd, new Ppopa(view));
-            mMoveLayout.addView(view);
-
-            view.setOnClickListener(this);
-            view.setOnTouchListener(this);
-
-
-            Toast.makeText(getApplicationContext(), "id: " + view.getId(), Toast.LENGTH_SHORT).show();
-            idd++;
-
+        }else if (id == R.id.colorRad){
+            SetFilterIcons(R.color.colorIconsRad);
+        }else if (id == R.id.colorNone){
+            if (IsInMap()){
+                ((ImageView)mapView.get(markIdImage).view).setColorFilter(null);
+            }
+        }else if (id == R.id.colorBlue){
+            SetFilterIcons(R.color.colorIconsBlue);
+        }else if (id == R.id.colorGreen){
+            SetFilterIcons(R.color.colorIconsGreen);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    void SetFilterIcons(int color){
+        if (IsInMap()){
+            ((ImageView)mapView.get(markIdImage).view).setColorFilter(getResources().getColor(color), PorterDuff.Mode.MULTIPLY);
+        }
+    }
+    boolean IsInMap(){
+        if (mapView.get(markIdImage) == null){
+            Toast.makeText(getApplicationContext(), "объект не выбран", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+    void NavCamera(){
+        // Handle the camera action
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 100);
+        View view = getLayoutInflater().inflate(R.layout.im_view, null);
+        view.setLayoutParams(layoutParams);
+
+        (view.findViewById(R.id.imm)).setId(idd);
+
+        mapView.put(idd, new Ppopa(view));
+        mMoveLayout.addView(view);
+
+        view.setOnClickListener(this);
+        view.setOnTouchListener(this);
+
+
+        Toast.makeText(getApplicationContext(), "id: " + view.getId(), Toast.LENGTH_SHORT).show();
+        idd++;
     }
 
 

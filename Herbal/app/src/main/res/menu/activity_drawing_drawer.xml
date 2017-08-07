@@ -13,9 +13,21 @@
     <item android:title="colors">
         <menu>
             <item
-                android:id="@+id/nav_share"
+                android:id="@+id/colorRad"
+                android:icon="@drawable/ic_menu_heard_broken"
+                android:title="Rad" />
+            <item
+                android:id="@+id/colorBlue"
                 android:icon="@drawable/ic_menu_heard_pink"
-                android:title="Share" />
+                android:title="Blue" />
+            <item
+                android:id="@+id/colorGreen"
+                android:icon="@drawable/ic_menu_heard_pink"
+                android:title="Green" />
+            <item
+                android:id="@+id/colorNone"
+                android:icon="@drawable/ic_menu_heard_pink"
+                android:title="None" />
         </menu>
     </item>
 
