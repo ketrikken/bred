@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -55,6 +56,8 @@ public class DrawingActivity extends AppCompatActivity
         ImDel = (ImageView) findViewById(R.id.imageDel);
         mMoveLayout = (RelativeLayout) findViewById(R.id.drawingGreed);
 
+        InitImageButton();
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -66,6 +69,18 @@ public class DrawingActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    private void InitImageButton(){
+        ImageButton btnRotate = (ImageButton) findViewById(R.id.btnRotate);
+        btnRotate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!IsInMap()){
+                    return;
+                }
+                mapView.get(markIdImage).view.setRotation(mapView.get(markIdImage).view.getRotation() + 15);
+            }
+        });
+    }
     private void ZoomClicks(){
         zoomBtn.setOnZoomInClickListener(new View.OnClickListener() {
             @Override
