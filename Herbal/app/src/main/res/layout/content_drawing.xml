@@ -9,40 +9,62 @@
     tools:showIn="@layout/app_bar_drawing">
 
 
-
     <RelativeLayout
         android:id="@+id/drawingGreed"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        tools:layout_editor_absoluteY="-66dp"
-        tools:layout_editor_absoluteX="89dp">
-
+        android:background="@drawable/light_back">
 
 
         <ImageView
             android:id="@+id/imageDel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight = "true"
+            android:layout_alignParentRight="true"
             android:layout_weight="1"
             app:srcCompat="@android:drawable/ic_delete" />
 
-        <ZoomControls
+      <!--  <ZoomControls
             android:id="@+id/btnZoom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true" />-->
 
         <ImageButton
             android:id="@+id/btnRotate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/ic_menu_rotate"
-            android:layout_above="@+id/btnZoom"
-            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="19dp" />
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/imageDel"
+            android:layout_marginTop="11dp"
+            android:background="@color/colorTransporent"
+            app:srcCompat="@drawable/ic_drawing_rotate"
+            android:layout_alignLeft="@+id/imageDel"
+            android:layout_alignStart="@+id/imageDel" />
+
+        <ImageButton
+            android:id="@+id/imageButtonPlus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTransporent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="15dp"
+            app:srcCompat="@drawable/ic_plus" />
+
+        <ImageButton
+            android:id="@+id/imageButtonMinus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/imageButtonPlus"
+            android:background="@color/colorTransporent"
+            android:layout_alignLeft="@+id/imageButtonPlus"
+            android:layout_alignStart="@+id/imageButtonPlus"
+            android:layout_marginBottom="15dp"
+            app:srcCompat="@drawable/ic_minus" />
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

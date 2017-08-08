@@ -49,7 +49,7 @@ public class DrawingActivity extends AppCompatActivity
 
 
         markIdImage = -250;
-        zoomBtn = (ZoomControls) findViewById(R.id.btnZoom);
+
         ZoomClicks();
         idd = 0;
         mapView = new SparseArrayCompat<Ppopa>();
@@ -82,6 +82,7 @@ public class DrawingActivity extends AppCompatActivity
         });
     }
     private void ZoomClicks(){
+       /* zoomBtn = (ZoomControls) findViewById(R.id.btnZoom);
         zoomBtn.setOnZoomInClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,6 +99,39 @@ public class DrawingActivity extends AppCompatActivity
         });
 
         zoomBtn.setOnZoomOutClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!IsInMap()){
+                    return;
+                }
+                float x = mapView.get(markIdImage).view.getScaleX();
+                float y = mapView.get(markIdImage).view.getScaleY();
+
+                if (x - 0.1 > 0){
+
+                    mapView.get(markIdImage).view.setScaleX((float) (x-0.1));
+                    mapView.get(markIdImage).view.setScaleY((float) (y-0.1));
+                }
+            }
+        });*/
+        ImageButton plus = (ImageButton)findViewById(R.id.imageButtonPlus);
+        plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!IsInMap()){
+                    return;
+                }
+
+                float x = mapView.get(markIdImage).view.getScaleX();
+                float y = mapView.get(markIdImage).view.getScaleY();
+
+                mapView.get(markIdImage).view.setScaleX((float) (x+0.1));
+                mapView.get(markIdImage).view.setScaleY((float) (y+0.1));
+            }
+        });
+
+        ImageButton minus = (ImageButton) findViewById(R.id.imageButtonMinus);
+        minus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!IsInMap()){
