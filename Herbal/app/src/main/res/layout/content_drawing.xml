@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.herbal.DrawingActivity"
-    tools:showIn="@layout/app_bar_drawing">
+    tools:showIn="@layout/app_bar_drawing"
+    android:id="@+id/content_drawing">
 
 
     <RelativeLayout
@@ -65,6 +66,18 @@
             android:layout_alignStart="@+id/imageButtonPlus"
             android:layout_marginBottom="15dp"
             app:srcCompat="@drawable/ic_minus" />
+
+        <Button
+            android:id="@+id/btnTakeScreenshot"
+            android:text="Take Screenshot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Take Screenshot"
+            android:id="@+id/ImageView01" />
 
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

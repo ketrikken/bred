@@ -1,13 +1,17 @@
 package com.example.herbal;
 
-import android.content.res.Resources;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.LightingColorFilter;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.util.SparseArrayCompat;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -18,14 +22,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import android.widget.ZoomControls;
 
-
-
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Date;
 
 
 public class DrawingActivity extends AppCompatActivity
@@ -38,7 +43,9 @@ public class DrawingActivity extends AppCompatActivity
     private RelativeLayout mMoveLayout;
     private SparseArrayCompat< Ppopa> mapView;
     private int leftX, bottomY;
-    private ZoomControls zoomBtn;
+
+    private Button btnTakeScreenshot;
+    ImageView image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +53,16 @@ public class DrawingActivity extends AppCompatActivity
         setContentView(R.layout.activity_drawing);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        btnTakeScreenshot= (Button) findViewById(R.id.btnTakeScreenshot);
+
+        btnTakeScreenshot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takeScreenshot();
+            }
+        });
 
 
         markIdImage = -250;
@@ -69,6 +86,67 @@ public class DrawingActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    private void takeScreenshot() {
+        Date now = new Date();
+        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+
+        View v1 = getWindow().getDecorView().getRootView();
+        store(getScreenShot(v1), "new.png");
+
+    }
+
+    public Bitmap getScreenShot(View view) {
+        View screenView = view.getRootView();
+        screenView.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(screenView.getDrawingCache());
+        screenView.setDrawingCacheEnabled(false);
+        return bitmap;
+    }
+    public void store(Bitmap bm, String fileName){
+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Screenshots";
+        File dir = new File(dirPath);
+        if(!dir.exists())
+            dir.mkdirs();
+        File file = new File(dirPath, fileName);
+        try {
+            Toast.makeText(getApplicationContext(), "что-то выполено", Toast.LENGTH_SHORT).show();
+            FileOutputStream fOut = new FileOutputStream(file);
+
+
+            bm.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+            fOut.flush();
+            fOut.close();
+
+            openScreenshot(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void shareImage(File file){
+        Uri uri = Uri.fromFile(file);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("image/*");
+
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
+        intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        try {
+            startActivity(Intent.createChooser(intent, "Share Screenshot"));
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getApplicationContext(), "No App Available", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void openScreenshot(File imageFile) {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+    Uri uri = Uri.fromFile(imageFile);
+        intent.setDataAndType(uri, "image/*");
+    startActivity(intent);
+}
+
+
     private void InitImageButton(){
         ImageButton btnRotate = (ImageButton) findViewById(R.id.btnRotate);
         btnRotate.setOnClickListener(new View.OnClickListener() {
@@ -82,38 +160,6 @@ public class DrawingActivity extends AppCompatActivity
         });
     }
     private void ZoomClicks(){
-       /* zoomBtn = (ZoomControls) findViewById(R.id.btnZoom);
-        zoomBtn.setOnZoomInClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!IsInMap()){
-                    return;
-                }
-
-                float x = mapView.get(markIdImage).view.getScaleX();
-                float y = mapView.get(markIdImage).view.getScaleY();
-
-                mapView.get(markIdImage).view.setScaleX((float) (x+0.1));
-                mapView.get(markIdImage).view.setScaleY((float) (y+0.1));
-            }
-        });
-
-        zoomBtn.setOnZoomOutClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!IsInMap()){
-                    return;
-                }
-                float x = mapView.get(markIdImage).view.getScaleX();
-                float y = mapView.get(markIdImage).view.getScaleY();
-
-                if (x - 0.1 > 0){
-
-                    mapView.get(markIdImage).view.setScaleX((float) (x-0.1));
-                    mapView.get(markIdImage).view.setScaleY((float) (y-0.1));
-                }
-            }
-        });*/
         ImageButton plus = (ImageButton)findViewById(R.id.imageButtonPlus);
         plus.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,6 +252,17 @@ public class DrawingActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+
+
+
+
+
+
+
+
+
 
     void SetFilterIcons(int color){
         if (IsInMap()){
