@@ -1,5 +1,6 @@
 package com.example.herbal;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -60,7 +61,9 @@ public class DrawingActivity extends AppCompatActivity
         btnTakeScreenshot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takeScreenshot();
+                //takeScreenshot();
+                GetScreen screen = new GetScreen();
+                screen.take2(DrawingActivity.this);
             }
         });
 
@@ -86,6 +89,7 @@ public class DrawingActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+/*
     private void takeScreenshot() {
         Date now = new Date();
         android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
@@ -123,28 +127,16 @@ public class DrawingActivity extends AppCompatActivity
         }
     }
 
-    private void shareImage(File file){
-        Uri uri = Uri.fromFile(file);
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.setType("image/*");
 
-        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
-        intent.putExtra(android.content.Intent.EXTRA_TEXT, "");
-        intent.putExtra(Intent.EXTRA_STREAM, uri);
-        try {
-            startActivity(Intent.createChooser(intent, "Share Screenshot"));
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(getApplicationContext(), "No App Available", Toast.LENGTH_SHORT).show();
-        }
-    }
     private void openScreenshot(File imageFile) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
     Uri uri = Uri.fromFile(imageFile);
-        intent.setDataAndType(uri, "image/*");
+        intent.setDataAndType(uri, "image*/
+/*");
     startActivity(intent);
 }
+*/
 
 
     private void InitImageButton(){
