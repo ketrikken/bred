@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<
     android.widget.SimpleCursorAdapter adapter;
     Cursor cursor;
     ListView mainList;
-    Database db;
+    Database database;
 
     List<String> listOfNames, listOfId;
     @Override
@@ -52,15 +52,15 @@ public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        db = new Database(this);
-        db.open();
+        database = new Database(this);
+        database.open();
         // получаем курсор
-        cursor = db.getAllData();
+        cursor = database.getAllData();
         startManagingCursor(cursor);
 
 
         // формируем столбцы сопоставления
-        String[] from = new String[] { DBHelper.KEY_NAME};
+        String[] from = new String[] { DBHelper.CONTACTS_KEY_NAME};
         int[] to = new int[] { R.id.textText};
 
         // создааем адаптер и настраиваем список
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Toast.makeText(getApplicationContext(), Long.toString(id), Toast.LENGTH_LONG).show();
-                db.delFromId(id);
+                database.delFromId(id);
                 cursor.requery();
                 return true;
             }
@@ -112,11 +112,11 @@ public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<
                         .setAction("Action", null).show();
 
                 for(int i = 0; i < 11; ++i){
-                    db.addRec(names[i], emails[i]);
+                    database.addRec(names[i], emails[i]);
                 }
                 cursor.requery();
-                db.PrintAll();
-
+                database.PrintAll();
+                Log.d("mLog", Integer.toString(database.GETVERSION()));
             }
         });
     }
@@ -145,12 +145,12 @@ public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<
     protected void onDestroy() {
         super.onDestroy();
         // закрываем подключение при выходе
-        db.close();
+        database.close();
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new MyCursorLoader(this, db);
+        return new MyCursorLoader(this, database);
     }
 
     @Override
@@ -164,17 +164,17 @@ public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<
 
     static class MyCursorLoader extends android.support.v4.content.CursorLoader{
 
-        Database db;
+        Database database;
 
         public MyCursorLoader(Context context, Database db) {
             super(context);
-            this.db = db;
+            this.database = db;
         }
 
         @Override
         public Cursor loadInBackground() {
             //return super.loadInBackground();
-            Cursor cursor = db.getAllData();
+            Cursor cursor = database.getAllData();
             return cursor;
         }
 

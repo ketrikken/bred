@@ -16,17 +16,17 @@ import java.util.List;
 public class Database {
 
     private DBHelper dbHelper;
-    private SQLiteDatabase db;
-    private final Context mCtx;
+    private SQLiteDatabase database;
+    private final Context myContext;
 
     public Database(Context ctx) {
-        mCtx = ctx;
+        myContext = ctx;
     }
 
     // открыть подключение
     public void open() {
-        dbHelper = new DBHelper(mCtx, DBHelper.DATABASE_NAME, null, DBHelper.DATABASE_VERSION);
-        db = dbHelper.getWritableDatabase();
+        dbHelper = new DBHelper(myContext, DBHelper.DATABASE_NAME, null, DBHelper.DATABASE_VERSION);
+        database = dbHelper.getWritableDatabase();
     }
 
     // закрыть подключение
@@ -36,7 +36,7 @@ public class Database {
 
     public List<String> selectAll() {
         List<String> list = new ArrayList<>();
-        Cursor cursor = db.query(DBHelper.TABLE_CONTACTS, new String[] { "name" },
+        Cursor cursor = database.query(DBHelper.TABLE_CONTACTS, new String[] { "name" },
                 null, null, null, null, null);
 
         if (cursor.moveToFirst()) {
@@ -54,9 +54,9 @@ public class Database {
     public List<String> selectFromNames(String id) {
         List<String> list = new ArrayList<String>();
 
-        String selection = DBHelper.KEY_NAME + " = ?";
+        String selection = DBHelper.CONTACTS_KEY_NAME + " = ?";
         String[] selectionArgs =  new String[]{ /*String.valueOf(id)*/ id};
-        Cursor c = db.query(DBHelper.TABLE_CONTACTS, new String[] { DBHelper.KEY_NAME }, selection, selectionArgs, null, null, null);
+        Cursor c = database.query(DBHelper.TABLE_CONTACTS, new String[] { DBHelper.CONTACTS_KEY_NAME }, selection, selectionArgs, null, null, null);
         if (c.moveToFirst()) {
             do {
                 list.add(c.getString(0));
@@ -72,7 +72,7 @@ public class Database {
 
     public List<String> selectAllID() {
         List<String> list = new ArrayList<String>();
-        Cursor cursor = db.query(DBHelper.TABLE_CONTACTS, new String[] { "_id" },
+        Cursor cursor = database.query(DBHelper.TABLE_CONTACTS, new String[] { "_id" },
                 null, null, null, null, null);
 
         if (cursor.moveToFirst()) {
@@ -90,11 +90,11 @@ public class Database {
 
     // получить все данные из таблицы DB_TABLE
     Cursor getAllData() {
-        return db.query(DBHelper.TABLE_CONTACTS, null, null, null, null, null, null);
+        return database.query(DBHelper.TABLE_CONTACTS, null, null, null, null, null, null);
     }
     void delFromId(long id) {
         // db.delete(TABLE_CONTACTS, KEY_ID + " = ? ", new String[] {id});
-        db.delete(DBHelper.TABLE_CONTACTS, DBHelper.KEY_ID + " = " + id, null);
+        database.delete(DBHelper.TABLE_CONTACTS, DBHelper.EXTERNAL_KEY_ID + " = " + id, null);
     }
     public void PrintAll()
     {
@@ -102,9 +102,9 @@ public class Database {
        // startManagingCursor(cursorr);
         Log.d("mLog", "-----------------------------------------");
         if (cursorr.moveToFirst()) {
-            int idIndex = cursorr.getColumnIndex(DBHelper.KEY_ID);
-            int nameIndex = cursorr.getColumnIndex(DBHelper.KEY_NAME);
-            int emailIndex = cursorr.getColumnIndex(DBHelper.KEY_EMAIL);
+            int idIndex = cursorr.getColumnIndex(DBHelper.EXTERNAL_KEY_ID);
+            int nameIndex = cursorr.getColumnIndex(DBHelper.CONTACTS_KEY_NAME);
+            int emailIndex = cursorr.getColumnIndex(DBHelper.CONTACTS_KEY_EMAIL);
             do {
                 Log.d("mLog", "ID = " + cursorr.getInt(idIndex) +
                         ", name = " + cursorr.getString(nameIndex) +
@@ -118,9 +118,12 @@ public class Database {
     // добавить запись в DB_TABLE
     public void addRec(String name, String email) {
         ContentValues cv = new ContentValues();
-        cv.put(DBHelper.KEY_NAME, name);
-        cv.put(DBHelper.KEY_EMAIL, email);
-        db.insert(DBHelper.TABLE_CONTACTS, null, cv);
+        cv.put(DBHelper.CONTACTS_KEY_NAME, name);
+        cv.put(DBHelper.CONTACTS_KEY_EMAIL, email);
+        database.insert(DBHelper.TABLE_CONTACTS, null, cv);
+    }
+    public int GETVERSION(){
+        return DBHelper.DATABASE_VERSION;
     }
 
 }

@@ -20,6 +20,18 @@ import java.util.Date;
 
 public class GetScreen {
 
+    public void take2(Activity activity){
+        store(activity, takeScreenShot2(activity), "new.png");
+    }
+
+    public void takeScreenshot(Activity activity) {
+        Date now = new Date();
+        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+
+        View v1 = activity.getWindow().getDecorView().getRootView();
+        store(activity, getScreenShot(v1), "new.png");
+
+    }
     private Bitmap takeScreenShot2(Activity activity) {
         View view = activity.getWindow().getDecorView();
         view.setDrawingCacheEnabled(true);
@@ -54,20 +66,6 @@ public class GetScreen {
         }
     }
 
-
-    public void take2(Activity activity){
-        store(activity, takeScreenShot2(activity), "new.png");
-    }
-
-    public void takeScreenshot(Activity activity) {
-        Date now = new Date();
-        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
-
-        View v1 = activity.getWindow().getDecorView().getRootView();
-        store(activity, getScreenShot(v1), "new.png");
-
-    }
-
     private Bitmap getScreenShot(View view) {
         View screenView = view.getRootView();
         screenView.setDrawingCacheEnabled(true);
@@ -96,7 +94,6 @@ public class GetScreen {
         }
     }
 
-
     private void openScreenshot(Activity activity, File imageFile) {
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
@@ -104,9 +101,4 @@ public class GetScreen {
         intent.setDataAndType(uri, "image/*");
         activity.startActivity(intent);
     }
-
-
-
-
-
 }
