@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<
         database = new Database(this);
         database.open();
         // получаем курсор
-        cursor = database.getAllData();
+        cursor = database.getAllDataContacts();
         startManagingCursor(cursor);
 
 
@@ -112,11 +112,11 @@ public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<
                         .setAction("Action", null).show();
 
                 for(int i = 0; i < 11; ++i){
-                    database.addRec(names[i], emails[i]);
+                    database.addRecContacts(names[i], emails[i]);
                 }
                 cursor.requery();
-                database.PrintAll();
-                Log.d("mLog", Integer.toString(database.GETVERSION()));
+                database.PrintAllContacts();
+                Log.d("mLog", Integer.toString(database.GET_VERSION()));
             }
         });
     }
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<
         @Override
         public Cursor loadInBackground() {
             //return super.loadInBackground();
-            Cursor cursor = database.getAllData();
+            Cursor cursor = database.getAllDataContacts();
             return cursor;
         }
 

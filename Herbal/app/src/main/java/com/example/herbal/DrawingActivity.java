@@ -1,9 +1,16 @@
 package com.example.herbal;
 
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.media.Image;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.ContactsContract;
 import android.support.v4.util.SparseArrayCompat;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -17,13 +24,26 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.List;
 
 
 public class DrawingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnTouchListener, View.OnClickListener{
 
+
+    String[] text = { "первый пошел", "второе описание", "описание петра", "что-то про антона", "Даша", "Борис",
+            "Костя", "Игорь", "Анна", "Денис", "сраный иван" };
 
     private Integer markIdImage;
     private ImageView imageDel;
@@ -32,7 +52,8 @@ public class DrawingActivity extends AppCompatActivity
     private SparseArrayCompat<ParametersGeneratedImage> mapGeneratedImage;
     private int leftX, bottomY;
 
-
+    private Database database;
+    private Cursor cursorImage, cursorNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +61,12 @@ public class DrawingActivity extends AppCompatActivity
         setContentView(R.layout.activity_drawing);
 
         InitOnCreate();
-
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        database = new Database(this);
+        database.open();/*
+        cursorNote = database.getAllDataNote();
+        cursorImage = database.getAllDataImage();*/
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -177,7 +202,10 @@ public class DrawingActivity extends AppCompatActivity
         }
 
     }
-
+    protected void onDestroy() {
+        super.onDestroy();
+        database.close();
+    }
     private void InitOnCreate() {
         ButtonScreen();
         markIdImage = Constants.INIT_VALUE_ID;
@@ -197,10 +225,65 @@ public class DrawingActivity extends AppCompatActivity
             public void onClick(View v) {
                 GetScreen screen = new GetScreen();
                 screen.take2(DrawingActivity.this);
+
+
+
+                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots" ;
+                Log.d("mLog", Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots/new.JPEG");
+                File dir = new File(path);
+                if(!dir.exists()){
+                    Toast.makeText(getApplicationContext(), "не удалилось", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                File imgFile = new File(path, "new.JPEG");
+
+                if(imgFile.exists()){
+                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    if (myBitmap != null) Toast.makeText(getApplicationContext(), "мап не ноль", Toast.LENGTH_SHORT).show();
+                    database.addRecNote(text[0], imgFile.getAbsolutePath());
+                } else {
+                    Log.d("mLog", "File doesn't exist");
+                }
+
+                //////// вот тут просто кака
+                // но выводит
+                List<String> mmm = database.getURLImages();
+                if (mmm.size() != 0) {
+                    ImageView im = (ImageView)findViewById(R.id.imageTemp);
+                    File fileTemp = new File(mmm.get(0));
+                    Bitmap myBitmapp = BitmapFactory.decodeFile(fileTemp.getAbsolutePath());
+                    im.setImageBitmap(myBitmapp);
+                }
+
+
             }
         });
     }
+    File readFileSD() {
+        // проверяем доступность SD
+        if (!Environment.getExternalStorageState().equals(
+                Environment.MEDIA_MOUNTED)) {
+            Log.d("mLog", "SD-карта не доступна: " + Environment.getExternalStorageState());
+            return null;
+        }
+        // получаем путь к SD
+        File sdPath = Environment.getExternalStorageDirectory();
+        // добавляем свой каталог к пути
+        sdPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots");
+        // формируем объект File, который содержит путь к файлу
+        File sdFile = new File(sdPath, "new.png");
+        try {
+            // открываем поток для чтения
+            BufferedReader br = new BufferedReader(new FileReader(sdFile));
 
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sdFile;
+    }
     private void InitImageButton(){
         ImageButton btnRotate = (ImageButton) findViewById(R.id.btnRotate);
         btnRotate.setOnClickListener(new View.OnClickListener() {

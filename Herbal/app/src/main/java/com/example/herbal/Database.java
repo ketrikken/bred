@@ -4,8 +4,16 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.media.Image;
+import android.provider.ContactsContract;
 import android.util.Log;
 
+import org.w3c.dom.Text;
+
+import java.io.File;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,17 +96,46 @@ public class Database {
 
     }
 
+    public List<String> getURLImages() {
+        List<String> list = new ArrayList<String>();
+        Cursor cursor = database.query(DBHelper.TABLE_NOTE, new String[] { DBHelper.NOTE_KEY_IMAGE },
+                null, null, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                list.add(cursor.getString(0));
+
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return list;
+
+    }
+
+
+
     // получить все данные из таблицы DB_TABLE
-    Cursor getAllData() {
+    Cursor getAllDataContacts() {
         return database.query(DBHelper.TABLE_CONTACTS, null, null, null, null, null, null);
     }
+
+    Cursor getAllDataNote() {
+        return database.query(DBHelper.TABLE_NOTE, null, null, null, null, null, null);
+    }
+
+    Cursor getAllDataImage() {
+        return database.query(DBHelper.TABLE_IMAGES, null, null, null, null, null, null);
+    }
+
     void delFromId(long id) {
         // db.delete(TABLE_CONTACTS, KEY_ID + " = ? ", new String[] {id});
         database.delete(DBHelper.TABLE_CONTACTS, DBHelper.EXTERNAL_KEY_ID + " = " + id, null);
     }
-    public void PrintAll()
+    public void PrintAllContacts()
     {
-        Cursor cursorr = getAllData();
+        Cursor cursorr = getAllDataContacts();
        // startManagingCursor(cursorr);
         Log.d("mLog", "-----------------------------------------");
         if (cursorr.moveToFirst()) {
@@ -116,13 +153,36 @@ public class Database {
         cursorr.close();
     }
     // добавить запись в DB_TABLE
-    public void addRec(String name, String email) {
+    public void addRecContacts(String name, String email) {
         ContentValues cv = new ContentValues();
         cv.put(DBHelper.CONTACTS_KEY_NAME, name);
         cv.put(DBHelper.CONTACTS_KEY_EMAIL, email);
         database.insert(DBHelper.TABLE_CONTACTS, null, cv);
     }
-    public int GETVERSION(){
+
+
+    public void addRecNote(String text, String image) {
+        //, datetime()
+        database.execSQL("INSERT INTO "+ DBHelper.TABLE_NOTE + " VALUES ( null, " + "'"+ text + "'" + ", " + "'"+image+ "'" + ", '11.02.00')");
+
+    }
+
+    public int CountNotes() {
+        Cursor cursor = getAllDataNote();
+        int res = 0;
+        if (cursor.moveToFirst()) {
+            do {
+                res++;
+
+            } while (cursor.moveToNext());
+        }
+        if (cursor != null && !cursor.isClosed()) {
+            cursor.close();
+        }
+        return res;
+    }
+
+    public int GET_VERSION(){
         return DBHelper.DATABASE_VERSION;
     }
 

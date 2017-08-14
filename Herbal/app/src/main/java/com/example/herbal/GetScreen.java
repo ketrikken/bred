@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -21,7 +22,7 @@ import java.util.Date;
 public class GetScreen {
 
     public void take2(Activity activity){
-        store(activity, takeScreenShot2(activity), "new.png");
+        store(activity, takeScreenShot2(activity), "new.JPEG");
     }
 
     public void takeScreenshot(Activity activity) {
@@ -29,7 +30,7 @@ public class GetScreen {
         android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
 
         View v1 = activity.getWindow().getDecorView().getRootView();
-        store(activity, getScreenShot(v1), "new.png");
+        store(activity, getScreenShot(v1), "new.JPEG");
 
     }
     private Bitmap takeScreenShot2(Activity activity) {
@@ -74,7 +75,8 @@ public class GetScreen {
         return bitmap;
     }
     private void store(Activity activity, Bitmap bm, String fileName){
-        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Screenshots";
+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots";
+        //Log.d("mLog", Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots");
         File dir = new File(dirPath);
         if(!dir.exists())
             dir.mkdirs();
@@ -84,7 +86,7 @@ public class GetScreen {
             FileOutputStream fOut = new FileOutputStream(file);
 
 
-            bm.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+            bm.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
             fOut.flush();
             fOut.close();
 
