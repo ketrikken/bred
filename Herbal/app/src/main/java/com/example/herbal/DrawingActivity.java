@@ -63,6 +63,7 @@ public class DrawingActivity extends AppCompatActivity
     private Database database;
     private Bitmap bitmap;
     private  GetScreen screen;
+    private String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -243,10 +244,10 @@ public class DrawingActivity extends AppCompatActivity
     void saveData() {
 
 
-        String name = textt.getText().toString();
+        name = textt.getText().toString();
         if(bitmap != null && name != null){
 
-            screen.store(bitmap, name);
+            screen.store(DrawingActivity.this, bitmap, name + ".jpeg");
             Toast.makeText(this, "Типо сохранено", Toast.LENGTH_SHORT).show();
         }
        else Toast.makeText(this, "ошибка сохранения", Toast.LENGTH_SHORT).show();
@@ -264,6 +265,26 @@ public class DrawingActivity extends AppCompatActivity
         imageDel = (ImageView) findViewById(R.id.imageDel);
         relativeMoveLayout = (RelativeLayout) findViewById(R.id.drawingGreed);
         InitImageButton();
+
+        ImageButton imm = (ImageButton)findViewById(R.id.imageButtonBD);
+        imm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //database.open();
+                //
+                SaveInBD();
+                List<String> mmm = database.getURLImages();
+
+                if (mmm.size() == 1) {
+                    ImageView im = (ImageView)findViewById(R.id.imageTemp);
+                    File fileTemp = new File(mmm.get(0));
+                    Bitmap myBitmapp = BitmapFactory.decodeFile(fileTemp.getAbsolutePath());
+                    im.setImageBitmap(myBitmapp);
+                    Toast.makeText(DrawingActivity.this, "Покажись картинка", Toast.LENGTH_SHORT).show();
+                }
+                else Toast.makeText(DrawingActivity.this, Integer.toString(mmm.size()), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
     private void ButtonScreen(){
         ImageButton btnImScreen = (ImageButton)findViewById(R.id.imageButtonGetScreen);
@@ -316,7 +337,20 @@ public class DrawingActivity extends AppCompatActivity
             }
         });*/
     }
+    private void SaveInBD(){
+        Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots" ;
+        File imgFile = new File(path, name + ".jpeg");
 
+        if(imgFile.exists()){
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            if (myBitmap != null) Toast.makeText(getApplicationContext(), "мап не ноль", Toast.LENGTH_SHORT).show();
+            database.delFromImages();
+            database.addRecNote(text[0], imgFile.getAbsolutePath());
+        } else {
+            Log.d("mLog", "File doesn't exist");
+        }
+    }
     private void InitImageButton(){
         ImageButton btnRotate = (ImageButton) findViewById(R.id.btnRotate);
         btnRotate.setOnClickListener(new View.OnClickListener() {

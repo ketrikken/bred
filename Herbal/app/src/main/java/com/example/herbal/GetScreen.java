@@ -22,7 +22,7 @@ import java.util.Date;
 public class GetScreen {
 
     public void take2(Activity activity, String fileName){
-        store( takeScreenShot2(activity), fileName + "JPEG");
+        store(activity, takeScreenShot2(activity), fileName + "JPEG");
     }
 
     public void takeScreenshot(Activity activity) {
@@ -30,7 +30,7 @@ public class GetScreen {
         android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
 
         View v1 = activity.getWindow().getDecorView().getRootView();
-        store(getScreenShot(v1), "new.JPEG");
+        store(activity, getScreenShot(v1), "new.JPEG");
 
     }
     public Bitmap takeScreenShot2(Activity activity) {
@@ -74,9 +74,9 @@ public class GetScreen {
         screenView.setDrawingCacheEnabled(false);
         return bitmap;
     }
-    public void store(/*Activity activity, */Bitmap bm, String fileName){
+    public void store(Activity activity, Bitmap bm, String fileName){
         String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots";
-        //Log.d("mLog", Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots");
+        Log.d("mLog", Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots/"+fileName);
         File dir = new File(dirPath);
         if(!dir.exists())
             dir.mkdirs();
@@ -84,13 +84,11 @@ public class GetScreen {
         try {
            // Toast.makeText(activity.getApplicationContext(), "что-то выполено", Toast.LENGTH_SHORT).show();
             FileOutputStream fOut = new FileOutputStream(file);
-
-
             bm.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
             fOut.flush();
             fOut.close();
 
-            //openScreenshot(activity, file);
+            openScreenshot(activity, file);
         } catch (Exception e) {
             e.printStackTrace();
         }

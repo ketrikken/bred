@@ -26,9 +26,10 @@
             app:srcCompat="@android:drawable/ic_delete" />
         <ImageView
             android:id="@+id/imageTemp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_alignBottom="@+id/imageButtonPlus"
+            android:src="@color/colorIconsRad"
             android:layout_centerHorizontal="true" />
       <!--  <ZoomControls
             android:id="@+id/btnZoom"
@@ -86,6 +87,16 @@
             app:srcCompat="@drawable/ic_menu_camera"
             android:layout_alignLeft="@+id/btnRotate"
             android:layout_alignStart="@+id/btnRotate" />
+
+        <ImageButton
+            android:id="@+id/imageButtonBD"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/imageButtonGetScreen"
+            android:layout_marginTop="89dp"
+            app:srcCompat="@drawable/ic_menu_gallery" />
 
 
     </RelativeLayout>

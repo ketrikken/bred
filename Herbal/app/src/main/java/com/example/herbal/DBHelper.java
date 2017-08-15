@@ -19,7 +19,6 @@ import java.util.List;
         public static final String DATABASE_NAME = "contactsDB";
         public static final String TABLE_CONTACTS = "contacts";
 
-        public static final String TABLE_IMAGES = "images";
         public static final String TABLE_NOTE = "note";
 
         public static final String EXTERNAL_KEY_ID = "_id";

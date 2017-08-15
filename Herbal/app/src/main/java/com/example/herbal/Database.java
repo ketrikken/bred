@@ -33,8 +33,9 @@ public class Database {
 
     // открыть подключение
     public void open() {
-        dbHelper = new DBHelper(myContext, DBHelper.DATABASE_NAME, null, DBHelper.DATABASE_VERSION);
-        database = dbHelper.getWritableDatabase();
+
+            dbHelper = new DBHelper(myContext, DBHelper.DATABASE_NAME, null, DBHelper.DATABASE_VERSION);
+            database = dbHelper.getWritableDatabase();
     }
 
     // закрыть подключение
@@ -114,7 +115,9 @@ public class Database {
 
     }
 
-
+    void delFromImages() {
+        database.delete(DBHelper.TABLE_NOTE, DBHelper.EXTERNAL_KEY_ID + " >= 0" , null);
+    }
 
     // получить все данные из таблицы DB_TABLE
     Cursor getAllDataContacts() {
@@ -125,9 +128,6 @@ public class Database {
         return database.query(DBHelper.TABLE_NOTE, null, null, null, null, null, null);
     }
 
-    Cursor getAllDataImage() {
-        return database.query(DBHelper.TABLE_IMAGES, null, null, null, null, null, null);
-    }
 
     void delFromId(long id) {
         // db.delete(TABLE_CONTACTS, KEY_ID + " = ? ", new String[] {id});
