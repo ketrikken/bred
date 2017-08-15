@@ -72,12 +72,20 @@
             android:layout_marginBottom="15dp"
             app:srcCompat="@drawable/ic_minus" />
 
-        <Button
-            android:id="@+id/btnTakeScreenshot"
-            android:text="Take Screenshot"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
 
+
+        <ImageButton
+            android:id="@+id/imageButtonGetScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="@color/colorTransporent"
+            android:layout_below="@+id/btnRotate"
+            android:layout_marginTop="14dp"
+            app:srcCompat="@drawable/ic_menu_camera"
+            android:layout_alignLeft="@+id/btnRotate"
+            android:layout_alignStart="@+id/btnRotate" />
 
 
     </RelativeLayout>

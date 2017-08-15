@@ -21,8 +21,8 @@ import java.util.Date;
 
 public class GetScreen {
 
-    public void take2(Activity activity){
-        store(activity, takeScreenShot2(activity), "new.JPEG");
+    public void take2(Activity activity, String fileName){
+        store( takeScreenShot2(activity), fileName + "JPEG");
     }
 
     public void takeScreenshot(Activity activity) {
@@ -30,10 +30,10 @@ public class GetScreen {
         android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
 
         View v1 = activity.getWindow().getDecorView().getRootView();
-        store(activity, getScreenShot(v1), "new.JPEG");
+        store(getScreenShot(v1), "new.JPEG");
 
     }
-    private Bitmap takeScreenShot2(Activity activity) {
+    public Bitmap takeScreenShot2(Activity activity) {
         View view = activity.getWindow().getDecorView();
         view.setDrawingCacheEnabled(true);
         view.buildDrawingCache();
@@ -74,7 +74,7 @@ public class GetScreen {
         screenView.setDrawingCacheEnabled(false);
         return bitmap;
     }
-    private void store(Activity activity, Bitmap bm, String fileName){
+    public void store(/*Activity activity, */Bitmap bm, String fileName){
         String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots";
         //Log.d("mLog", Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots");
         File dir = new File(dirPath);
@@ -82,7 +82,7 @@ public class GetScreen {
             dir.mkdirs();
         File file = new File(dirPath, fileName);
         try {
-            Toast.makeText(activity.getApplicationContext(), "что-то выполено", Toast.LENGTH_SHORT).show();
+           // Toast.makeText(activity.getApplicationContext(), "что-то выполено", Toast.LENGTH_SHORT).show();
             FileOutputStream fOut = new FileOutputStream(file);
 
 
@@ -90,7 +90,7 @@ public class GetScreen {
             fOut.flush();
             fOut.close();
 
-            openScreenshot(activity, file);
+            //openScreenshot(activity, file);
         } catch (Exception e) {
             e.printStackTrace();
         }

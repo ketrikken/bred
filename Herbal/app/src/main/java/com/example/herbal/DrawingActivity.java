@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,11 +26,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.w3c.dom.Text;
@@ -56,8 +59,10 @@ public class DrawingActivity extends AppCompatActivity
     private SparseArrayCompat<ParametersGeneratedImage> mapGeneratedImage;
     private int leftX, bottomY;
 
+    private EditText textt;
     private Database database;
-    private Cursor cursorImage, cursorNote;
+    private Bitmap bitmap;
+    private  GetScreen screen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +72,8 @@ public class DrawingActivity extends AppCompatActivity
         InitOnCreate();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         database = new Database(this);
-        database.open();/*
-        cursorNote = database.getAllDataNote();
-        cursorImage = database.getAllDataImage();*/
+        database.open();
+        screen = new GetScreen();;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -215,10 +219,11 @@ public class DrawingActivity extends AppCompatActivity
         LinearLayout view = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog_save_image, null);
         // устанавливаем ее, как содержимое тела диалога
         adb.setView(view);
+
+        textt = (EditText)view.findViewById(R.id.fileName);
+
         adb.setIcon(android.R.drawable.ic_dialog_info);
-        // кнопка положительного ответа
         adb.setPositiveButton("save", myOnClickListener);
-        // кнопка отрицательного ответа
         adb.setNegativeButton("cancel", myOnClickListener);
         return adb.create();
     }
@@ -226,11 +231,9 @@ public class DrawingActivity extends AppCompatActivity
         @Override
         public void onClick(DialogInterface dialog, int which) {
             switch (which) {
-                // положительная кнопка
                 case Dialog.BUTTON_POSITIVE:
                     saveData();
                     break;
-                // негативная кнопка
                 case Dialog.BUTTON_NEGATIVE:
                     break;
             }
@@ -238,7 +241,15 @@ public class DrawingActivity extends AppCompatActivity
     };
 
     void saveData() {
-        Toast.makeText(this, "Типо сохранено", Toast.LENGTH_SHORT).show();
+
+
+        String name = textt.getText().toString();
+        if(bitmap != null && name != null){
+
+            screen.store(bitmap, name);
+            Toast.makeText(this, "Типо сохранено", Toast.LENGTH_SHORT).show();
+        }
+       else Toast.makeText(this, "ошибка сохранения", Toast.LENGTH_SHORT).show();
     }
     protected void onDestroy() {
         super.onDestroy();
@@ -255,18 +266,25 @@ public class DrawingActivity extends AppCompatActivity
         InitImageButton();
     }
     private void ButtonScreen(){
-        Button btnTakeScreenshot;
-        btnTakeScreenshot= (Button) findViewById(R.id.btnTakeScreenshot);
-
-        btnTakeScreenshot.setOnClickListener(new View.OnClickListener() {
+        ImageButton btnImScreen = (ImageButton)findViewById(R.id.imageButtonGetScreen);
+        btnImScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GetScreen screen = new GetScreen();
-                screen.take2(DrawingActivity.this);
+                bitmap = screen.takeScreenShot2(DrawingActivity.this);
+               showDialog(1);
+            }
+        });
 
 
+       /* btnTakeScreenshot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               *//* GetScreen screen = new GetScreen();
+                screen.take2(DrawingActivity.this, "123");*//*
 
-                String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots" ;
+
+                // чтение файла
+              *//*  String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots" ;
                 Log.d("mLog", Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots/new.JPEG");
                 File dir = new File(path);
                 if(!dir.exists()){
@@ -293,10 +311,10 @@ public class DrawingActivity extends AppCompatActivity
                     Bitmap myBitmapp = BitmapFactory.decodeFile(fileTemp.getAbsolutePath());
                     im.setImageBitmap(myBitmapp);
                 }
-                showDialog(1);
+                *//*
 
             }
-        });
+        });*/
     }
 
     private void InitImageButton(){
