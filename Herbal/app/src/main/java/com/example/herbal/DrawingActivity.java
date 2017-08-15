@@ -1,5 +1,7 @@
 package com.example.herbal;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.v4.util.SparseArrayCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +27,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -202,6 +206,40 @@ public class DrawingActivity extends AppCompatActivity
         }
 
     }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        adb.setTitle("Save Image?");
+        // создаем view из dialog.xml
+        LinearLayout view = (LinearLayout) getLayoutInflater().inflate(R.layout.dialog_save_image, null);
+        // устанавливаем ее, как содержимое тела диалога
+        adb.setView(view);
+        adb.setIcon(android.R.drawable.ic_dialog_info);
+        // кнопка положительного ответа
+        adb.setPositiveButton("save", myOnClickListener);
+        // кнопка отрицательного ответа
+        adb.setNegativeButton("cancel", myOnClickListener);
+        return adb.create();
+    }
+    DialogInterface.OnClickListener myOnClickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+                // положительная кнопка
+                case Dialog.BUTTON_POSITIVE:
+                    saveData();
+                    break;
+                // негативная кнопка
+                case Dialog.BUTTON_NEGATIVE:
+                    break;
+            }
+        }
+    };
+
+    void saveData() {
+        Toast.makeText(this, "Типо сохранено", Toast.LENGTH_SHORT).show();
+    }
     protected void onDestroy() {
         super.onDestroy();
         database.close();
@@ -255,35 +293,12 @@ public class DrawingActivity extends AppCompatActivity
                     Bitmap myBitmapp = BitmapFactory.decodeFile(fileTemp.getAbsolutePath());
                     im.setImageBitmap(myBitmapp);
                 }
-
+                showDialog(1);
 
             }
         });
     }
-    File readFileSD() {
-        // проверяем доступность SD
-        if (!Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-            Log.d("mLog", "SD-карта не доступна: " + Environment.getExternalStorageState());
-            return null;
-        }
-        // получаем путь к SD
-        File sdPath = Environment.getExternalStorageDirectory();
-        // добавляем свой каталог к пути
-        sdPath = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots");
-        // формируем объект File, который содержит путь к файлу
-        File sdFile = new File(sdPath, "new.png");
-        try {
-            // открываем поток для чтения
-            BufferedReader br = new BufferedReader(new FileReader(sdFile));
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return sdFile;
-    }
     private void InitImageButton(){
         ImageButton btnRotate = (ImageButton) findViewById(R.id.btnRotate);
         btnRotate.setOnClickListener(new View.OnClickListener() {
