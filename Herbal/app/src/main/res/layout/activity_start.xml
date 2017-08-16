@@ -24,7 +24,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="List" />
-
+        <Button
+            android:id="@+id/buttonAddNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="add note" />
 
     </LinearLayout>
 
