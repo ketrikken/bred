@@ -7,8 +7,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 public class activity_add_note extends AppCompatActivity {
+
+    String pathToPicture;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +53,15 @@ public class activity_add_note extends AppCompatActivity {
     }
 
     public void OnOpenFileClick(View view) {
-        OpenFileDialog fileDialog = new OpenFileDialog(this);
+        OpenFileDialog fileDialog = new OpenFileDialog(this)
+                .setFilter(".*\\.jpeg")
+                .setOpenDialogListener(new OpenFileDialog.OpenDialogListener() {
+                    @Override
+                    public void OnSelectedFile(String fileName) {
+                        Toast.makeText(getApplicationContext(), fileName, Toast.LENGTH_LONG).show();
+                        pathToPicture = fileName;
+                    }
+                });
         fileDialog.show();
     }
 }

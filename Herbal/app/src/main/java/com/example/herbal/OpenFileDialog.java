@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
@@ -108,12 +109,17 @@ public class OpenFileDialog extends AlertDialog.Builder {
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        if (listener != null) Log.d("mLog", "listener != null");
+
                         if (selectedIndex > -1 && listener != null) {
-                            listener.OnSelectedFile(listView.getItemAtPosition(selectedIndex).toString());
+                            Log.d("mLog", listView.getItemAtPosition(selectedIndex).toString());
+                             listener.OnSelectedFile(listView.getItemAtPosition(selectedIndex).toString());
                         }
                         if (listener != null && isOnlyFoldersFilter) {
+                            Log.d("mLog", "что-то другое");
                             listener.OnSelectedFile(currentPath);
                         }
+                        Log.d("mLog", "обработалось нажатие");
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null);
@@ -122,6 +128,7 @@ public class OpenFileDialog extends AlertDialog.Builder {
     public AlertDialog show() {
         files.addAll(getFiles(currentPath));
         listView.setAdapter(new FileAdapter(getContext(), files));
+
         return super.show();
     }
     public OpenFileDialog setFilter(final String filter) {
