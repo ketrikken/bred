@@ -128,10 +128,20 @@ public class Database {
         return database.query(DBHelper.TABLE_NOTE, null, null, null, null, null, null);
     }
 
+    Cursor getAllDataThemeNote(){
+        return database.query(DBHelper.TABLE_THEME_NOTE, null, null, null, null, null, null);
+    }
+
+    void addRecTheme(String text){
+        database.execSQL("INSERT INTO "+ DBHelper.TABLE_THEME_NOTE + " VALUES ( null, " + "'" + text + "' );");
+
+    }
 
     void delFromId(long id) {
         // db.delete(TABLE_CONTACTS, KEY_ID + " = ? ", new String[] {id});
+        Log.d("mLog", id + " ");
         database.delete(DBHelper.TABLE_CONTACTS, DBHelper.EXTERNAL_KEY_ID + " = " + id, null);
+        PrintAllContacts();
     }
     public void PrintAllContacts()
     {

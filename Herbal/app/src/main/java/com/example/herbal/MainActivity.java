@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<
 
         // формируем столбцы сопоставления
         String[] from = new String[] { DBHelper.CONTACTS_KEY_NAME};
-        int[] to = new int[] { R.id.textText};
+        int[] to = new int[] { R.id.tvText};
 
         // создааем адаптер и настраиваем список
         adapter = new android.widget.SimpleCursorAdapter(this, R.layout.text, cursor, from, to);
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity  implements LoaderCallbacks<
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                String value = ((TextView) view.findViewById(R.id.textText)).getText().toString();
+                String value = ((TextView) view.findViewById(R.id.tvText)).getText().toString();
 
                 Toast.makeText(getApplicationContext(), "value: " + value, Toast.LENGTH_SHORT).show();
 

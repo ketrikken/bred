@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 public class StartActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button btnDrive, btnList, btnAddNote;
+    Button btnDrive, btnList, btnAddNote, btn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +23,10 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
 
         btnAddNote = (Button) findViewById(R.id.buttonAddNote);
         btnAddNote.setOnClickListener(this);
+
+
+        btn = (Button)findViewById(R.id.ListBdNew);
+        btn.setOnClickListener(this);
     }
 
     @Override
@@ -39,6 +43,10 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.buttonAddNote:
                 intent = new Intent(v.getContext(), activity_add_note.class);
+                startActivity(intent);
+                break;
+            case R.id.ListBdNew:
+                intent = new Intent(v.getContext(), ThemListActivity.class);
                 startActivity(intent);
                 break;
         }
