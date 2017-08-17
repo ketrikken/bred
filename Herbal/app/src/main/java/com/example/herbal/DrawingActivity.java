@@ -270,8 +270,7 @@ public class DrawingActivity extends AppCompatActivity
         imm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //database.open();
-                //
+
                 SaveInBD();
                 List<String> mmm = database.getURLImages();
 
@@ -295,47 +294,6 @@ public class DrawingActivity extends AppCompatActivity
                showDialog(1);
             }
         });
-
-
-       /* btnTakeScreenshot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               *//* GetScreen screen = new GetScreen();
-                screen.take2(DrawingActivity.this, "123");*//*
-
-
-                // чтение файла
-              *//*  String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots" ;
-                Log.d("mLog", Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots/new.JPEG");
-                File dir = new File(path);
-                if(!dir.exists()){
-                    Toast.makeText(getApplicationContext(), "не удалилось", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                File imgFile = new File(path, "new.JPEG");
-
-                if(imgFile.exists()){
-                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                    if (myBitmap != null) Toast.makeText(getApplicationContext(), "мап не ноль", Toast.LENGTH_SHORT).show();
-                    database.addRecNote(text[0], imgFile.getAbsolutePath());
-                } else {
-                    Log.d("mLog", "File doesn't exist");
-                }
-
-                //////// вот тут просто кака
-                // но выводит
-                List<String> mmm = database.getURLImages();
-                if (mmm.size() != 0) {
-                    ImageView im = (ImageView)findViewById(R.id.imageTemp);
-                    File fileTemp = new File(mmm.get(0));
-                    Bitmap myBitmapp = BitmapFactory.decodeFile(fileTemp.getAbsolutePath());
-                    im.setImageBitmap(myBitmapp);
-                }
-                *//*
-
-            }
-        });*/
     }
     private void SaveInBD(){
         Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
@@ -345,7 +303,7 @@ public class DrawingActivity extends AppCompatActivity
         if(imgFile.exists()){
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             if (myBitmap != null) Toast.makeText(getApplicationContext(), "мап не ноль", Toast.LENGTH_SHORT).show();
-            database.delFromImages();
+            //database.delFromImages();
             database.addRecNote(text[0], imgFile.getAbsolutePath());
         } else {
             Log.d("mLog", "File doesn't exist");

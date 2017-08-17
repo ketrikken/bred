@@ -1,18 +1,21 @@
 package com.example.herbal;
 
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 public class activity_add_note extends AppCompatActivity {
 
-    String pathToPicture;
-
+    private String pathToPicture;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +44,7 @@ public class activity_add_note extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     private void FAB(){
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.btnAddPicture);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.btnAddPicturePath);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,7 +52,6 @@ public class activity_add_note extends AppCompatActivity {
                 OnOpenFileClick(v);
             }
         });
-
     }
 
     public void OnOpenFileClick(View view) {

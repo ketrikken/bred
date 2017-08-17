@@ -4,15 +4,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.herbal.activity_add_note">
+    tools:context="com.example.herbal.activity_add_note"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+
+
+
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/light_back"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/headerText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="40dp"
+                    android:layout_marginBottom="@dimen/twodp"
+                    android:text="TextView" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_menu_heard_broken" />
+
+
+                <EditText
+                    android:id="@+id/editTextNodeMainInformation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="введите текст"
+                    android:inputType="textMultiLine" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
 
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/btnAddPicture"
+        android:id="@+id/btnAddPicturePath"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_dialog_map"  />
-
 </android.support.design.widget.CoordinatorLayout>
