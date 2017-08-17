@@ -15,20 +15,26 @@ import java.util.List;
 
     public class DBHelper extends SQLiteOpenHelper {
 
-        public static final int DATABASE_VERSION = 8;
+        public static final int DATABASE_VERSION = 12;
         public static final String DATABASE_NAME = "contactsDB";
-        public static final String TABLE_CONTACTS = "contacts";
-
-        public static final String TABLE_NOTE = "note";
 
         public static final String EXTERNAL_KEY_ID = "_id";
+
+    public static final String TABLE_CONTACTS = "contacts";
         public static final String CONTACTS_KEY_NAME = "name";
         public static final String CONTACTS_KEY_EMAIL = "email";
 
 
+    public static final String TABLE_NOTE = "note";
         public static final String NOTE_KEY_TEXT = "text";
         public static final String NOTE_KEY_CREATEDATA = "data";
         public static final String NOTE_KEY_IMAGE = "image";
+        public static final String NOTE_KEY_HEADER = "header";
+
+
+    public static final String TABLE_THEME_NOTE = "theme_note";
+        public static final String THEM_NOTE_KEY_HEADER = "header";
+
 
 
        /* public DBHelper(Context context) {
@@ -41,7 +47,9 @@ import java.util.List;
         public void onCreate(SQLiteDatabase db) {
             Log.d("mLog", "-------------------onCreate---------------");
             CreateContacts(db);
+            CreateTableThemeNote(db);
             CreateTableNote(db);
+            db.execSQL("insert into " + TABLE_THEME_NOTE + " VALUES (null, 'первая тема заметки');");
         }
 
         @Override
@@ -52,6 +60,7 @@ import java.util.List;
                     Log.d("mLog", "-------------------onUpdate---------------");
                     db.execSQL("drop table if exists " + TABLE_CONTACTS);
                     db.execSQL("drop table if exists " + TABLE_NOTE);
+                    db.execSQL("drop table if exists " + TABLE_THEME_NOTE);
                     onCreate(db);
 
             }
@@ -60,12 +69,20 @@ import java.util.List;
 
         private void CreateTableNote(SQLiteDatabase db){
             db.execSQL("create table " + TABLE_NOTE + "(" +
-                    EXTERNAL_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                    NOTE_KEY_TEXT + " TEXT," +
+                    EXTERNAL_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    NOTE_KEY_HEADER + " INTEGER, " +
+                    NOTE_KEY_TEXT + " TEXT, " +
                     NOTE_KEY_IMAGE + " TEXT, " +
-                    NOTE_KEY_CREATEDATA + " text );");
+                    NOTE_KEY_CREATEDATA + " text, "+
+                    "FOREIGN KEY (" + NOTE_KEY_HEADER + ") REFERENCES " + TABLE_THEME_NOTE + "(" + EXTERNAL_KEY_ID + ")" + "ON UPDATE SET NULL" + " );");
             Log.d("mLog", " --- CREATE NOTE ---- ");
         }
+        private void CreateTableThemeNote(SQLiteDatabase db){
+        db.execSQL("create table " + TABLE_THEME_NOTE + "(" +
+                EXTERNAL_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                THEM_NOTE_KEY_HEADER + " TEXT );");
+        Log.d("mLog", " --- CREATE theme NOTE ---- ");
+    }
         /*private void CreateTableImage(SQLiteDatabase db){
             // создаем таблицу картинок
             db.execSQL("create table " + TABLE_IMAGES + "(" +

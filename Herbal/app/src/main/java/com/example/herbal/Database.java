@@ -163,7 +163,7 @@ public class Database {
 
     public void addRecNote(String text, String image) {
         //, datetime()
-        database.execSQL("INSERT INTO "+ DBHelper.TABLE_NOTE + " VALUES ( null, " + "'"+ text + "'" + ", " + "'"+image+ "'" + ", '11.02.00')");
+        database.execSQL("INSERT INTO "+ DBHelper.TABLE_NOTE + " VALUES ( null, 1, " + "'"+ text + "'" + ", " + "'"+image+ "'" + ", '11.02.00')");
 
     }
 
