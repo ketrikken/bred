@@ -266,7 +266,7 @@ public class DrawingActivity extends AppCompatActivity
         relativeMoveLayout = (RelativeLayout) findViewById(R.id.drawingGreed);
         InitImageButton();
 
-        ImageButton imm = (ImageButton)findViewById(R.id.imageButtonBD);
+        /*ImageButton imm = (ImageButton)findViewById(R.id.imageButtonBD);
         imm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -283,7 +283,7 @@ public class DrawingActivity extends AppCompatActivity
                 }
                 else Toast.makeText(DrawingActivity.this, Integer.toString(mmm.size()), Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
     private void ButtonScreen(){
         ImageButton btnImScreen = (ImageButton)findViewById(R.id.imageButtonGetScreen);

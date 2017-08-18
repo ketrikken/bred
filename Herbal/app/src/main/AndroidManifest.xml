@@ -41,7 +41,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".StartActivity" />
         <activity android:name=".activity_add_note" />
-        <activity android:name=".ThemListActivity"></activity>
+        <activity android:name=".ThemListActivity" />
+        <activity android:name=".DialogUpdateActivity"></activity>
     </application>
 
 </manifest>
