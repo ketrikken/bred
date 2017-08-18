@@ -143,10 +143,17 @@ public class Database {
         database.delete(DBHelper.TABLE_CONTACTS, DBHelper.EXTERNAL_KEY_ID + " = " + id, null);
         PrintAllContacts();
     }
+
+    void delFromIdThemeNote(long id){
+        Log.d("mLog", id + " ");
+        database.delete(DBHelper.TABLE_THEME_NOTE, DBHelper.EXTERNAL_KEY_ID + " = " + id, null);
+        PrintAllTheme();
+    }
+
     public void PrintAllContacts()
     {
         Cursor cursorr = getAllDataContacts();
-       // startManagingCursor(cursorr);
+        // startManagingCursor(cursorr);
         Log.d("mLog", "-----------------------------------------");
         if (cursorr.moveToFirst()) {
             int idIndex = cursorr.getColumnIndex(DBHelper.EXTERNAL_KEY_ID);
@@ -162,6 +169,29 @@ public class Database {
 
         cursorr.close();
     }
+
+
+    public void PrintAllTheme()
+    {
+        Cursor cursorr = getAllDataThemeNote();
+        // startManagingCursor(cursorr);
+        Log.d("mLog", "-----------------------------------------");
+        if (cursorr.moveToFirst()) {
+            int idIndex = cursorr.getColumnIndex(DBHelper.EXTERNAL_KEY_ID);
+            int nameIndex = cursorr.getColumnIndex(DBHelper.THEM_NOTE_KEY_HEADER);
+            do {
+                Log.d("mLog", "ID = " + cursorr.getInt(idIndex) +
+                        ", theme = " + cursorr.getString(nameIndex));
+            } while (cursorr.moveToNext());
+        } else
+            Log.d("mLog","0 rows");
+
+        cursorr.close();
+    }
+
+
+
+
     // добавить запись в DB_TABLE
     public void addRecContacts(String name, String email) {
         ContentValues cv = new ContentValues();
@@ -192,7 +222,8 @@ public class Database {
         return res;
     }
     public void UpdateHeaders(String id, String name){
-        database.execSQL("UPDATE "+ DBHelper.TABLE_THEME_NOTE + " SET " + DBHelper.THEM_NOTE_KEY_HEADER + " = " + name + " where " + DBHelper.EXTERNAL_KEY_ID + " =" + id + " ;");
+        database.execSQL("UPDATE "+ DBHelper.TABLE_THEME_NOTE + " SET " + DBHelper.THEM_NOTE_KEY_HEADER + " = " +  " ' " + name + " ' "  + " where " + DBHelper.EXTERNAL_KEY_ID + " =" + id + " ;");
+        PrintAllTheme();
     }
 
     public void UpdatePersonsNames(String id, String name){

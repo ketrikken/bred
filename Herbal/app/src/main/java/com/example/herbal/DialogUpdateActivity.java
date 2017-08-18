@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StyleRes;
@@ -18,10 +19,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Toast;
 
-public class DialogUpdateActivity extends DialogFragment implements View.OnClickListener{
+public class DialogUpdateActivity extends DialogFragment implements View.OnClickListener {
 
     String myInt;
-    String name;
+    Intent toInfoClass;
 
     @Nullable
     @Override
@@ -31,11 +32,8 @@ public class DialogUpdateActivity extends DialogFragment implements View.OnClick
         v.findViewById(R.id.btnYes).setOnClickListener(this);
         v.findViewById(R.id.btnNo).setOnClickListener(this);
 
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-             myInt = bundle.getString("id", "-5");
-            name = bundle.getString("name", "-55");
-        }
+        toInfoClass = new Intent(getActivity(), ThemListActivity.class);
+
         return v;
 
     }
@@ -54,13 +52,8 @@ public class DialogUpdateActivity extends DialogFragment implements View.OnClick
     }
     private void Update()
     {
-        Database database = new Database(getActivity());
-        database.open();
-        Log.d("mLog", "------------------  " + myInt + "    ------------------------------------               " + name);
-        if (myInt == "-5") Log.d("mLog", myInt + " ");
-        else {
-            database.UpdatePersonsNames(myInt, name);
-        }
+        toInfoClass.putExtra("adapterMessage","nanananananana");
+        startActivity(toInfoClass);
     }
 
     public void onDismiss(DialogInterface dialog) {

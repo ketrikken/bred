@@ -14,6 +14,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +27,9 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 
+
+
+
 public class ThemListActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int DELETE_ITEM = 1, UPDATE_ITEM = 2;
@@ -33,6 +37,8 @@ public class ThemListActivity extends FragmentActivity implements LoaderManager.
     private ListView lvData;
     DialogFragment dlg1;
     SimpleCursorAdapter scAdapter;
+    Bundle extras;
+    String mmmmm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,18 +50,30 @@ public class ThemListActivity extends FragmentActivity implements LoaderManager.
         dlg1 = new DialogUpdateActivity();
 
         // формируем столбцы сопоставления
-        String[] from = new String[] { DBHelper.CONTACTS_KEY_NAME};
+        String[] from = new String[] { DBHelper.THEM_NOTE_KEY_HEADER};
         int[] to = new int[] { R.id.tvText};
 
+
         // создаем адаптер и настраиваем список
-        scAdapter = new SimpleCursorAdapter(this, R.layout.text, database.getAllDataContacts(), from, to, 0);
+        scAdapter = new SimpleCursorAdapter(this, R.layout.text, database.getAllDataThemeNote(), from, to, 0);
         lvData = (ListView) findViewById(R.id.list3);
         lvData.setAdapter(scAdapter);
 
         registerForContextMenu(lvData);
-        getSupportLoaderManager().initLoader(0, null, this);
+        getSupportLoaderManager().initLoader(0, null, ThemListActivity.this);
+
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        extras = getIntent().getExtras();
+        if (extras == null) Log.d("mLog", "extras == null");
+        if(extras != null) {
+            mmmmm = extras.getString("adapterMessage");
+            database.UpdateHeaders("1", mmmmm);
+        }
+    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -74,18 +92,14 @@ public class ThemListActivity extends FragmentActivity implements LoaderManager.
             case DELETE_ITEM:
                 Toast.makeText(this, "удали их нажато", Toast.LENGTH_SHORT).show();
                 // извлекаем id записи и удаляем соответствующую запись в БД
-                database.delFromId(acmi.id);
+                database.delFromIdThemeNote(acmi.id);
                 break;
             case UPDATE_ITEM:
-                Bundle bundle = new Bundle();
-                bundle.putString("id", Long.toString(acmi.id));
-                bundle.putString("name", "name");
-                dlg1.setArguments(bundle);
                 dlg1.show(getFragmentManager(), "dlg2");
                 break;
         }
             // получаем новый курсор с данными
-            getSupportLoaderManager().getLoader(0).forceLoad();
+        getSupportLoaderManager().getLoader(0).forceLoad();
 
 
         return true;
@@ -116,7 +130,7 @@ public class ThemListActivity extends FragmentActivity implements LoaderManager.
     public void onLoaderReset(Loader<Cursor> loader) {
 
     }
-    static class MyCursorLoader extends android.support.v4.content.CursorLoader{
+    static class MyCursorLoader extends CursorLoader{
 
         Database database;
 
@@ -128,7 +142,7 @@ public class ThemListActivity extends FragmentActivity implements LoaderManager.
         @Override
         public Cursor loadInBackground() {
             //return super.loadInBackground();
-            Cursor cursor = database.getAllDataContacts();
+            Cursor cursor = database.getAllDataThemeNote();
             return cursor;
         }
     }
