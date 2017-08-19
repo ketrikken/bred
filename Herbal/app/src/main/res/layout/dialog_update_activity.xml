@@ -2,19 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/fragment">
 
 
-        <TextView
+     <!--   <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="20dp"
-            android:text="rebkjskjhkchdlnvlkndlkvn"
+            android:text="Введите новый раздел"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-        <LinearLayout
+-->
+    <EditText
+        android:id="@+id/editTextNewTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Введите название раздела" />
+
+    <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 

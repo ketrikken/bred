@@ -134,7 +134,26 @@ public class Database {
 
     void addRecTheme(String text){
         database.execSQL("INSERT INTO "+ DBHelper.TABLE_THEME_NOTE + " VALUES ( null, " + "'" + text + "' );");
+        PrintAllTheme();
+    }
 
+    boolean findTheme(String s){
+        Cursor cursor = getAllDataThemeNote();
+
+
+        if (cursor.moveToFirst()) {
+            int Index = cursor.getColumnIndex(DBHelper.THEM_NOTE_KEY_HEADER);
+            do {
+                if (cursor.getString(Index).equals(s)){
+                    cursor.close();
+                    return true;
+                }
+            } while (cursor.moveToNext());
+        } else
+            Log.d("mLog","0 rows");
+
+        cursor.close();
+        return false;
     }
 
     void delFromId(long id) {

@@ -1,5 +1,6 @@
 package com.example.herbal;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
@@ -17,11 +18,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 public class DialogUpdateActivity extends DialogFragment implements View.OnClickListener {
 
-    String myInt;
+    public interface onSomeEventListener {
+        public void someEvent(String s);
+    }
+
+    onSomeEventListener someEventListener;
+
+
+    private EditText inputTheme;
     Intent toInfoClass;
 
     @Nullable
@@ -32,12 +41,12 @@ public class DialogUpdateActivity extends DialogFragment implements View.OnClick
         v.findViewById(R.id.btnYes).setOnClickListener(this);
         v.findViewById(R.id.btnNo).setOnClickListener(this);
 
+        inputTheme = (EditText) v.findViewById(R.id.editTextNewTheme);
         toInfoClass = new Intent(getActivity(), ThemListActivity.class);
 
         return v;
 
     }
-
 
     @Override
     public void onClick(View v) {
@@ -50,10 +59,29 @@ public class DialogUpdateActivity extends DialogFragment implements View.OnClick
         }
         dismiss();
     }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            someEventListener = (onSomeEventListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement onSomeEventListener");
+        }
+    }
+
     private void Update()
     {
-        toInfoClass.putExtra("adapterMessage","nanananananana");
-        startActivity(toInfoClass);
+        String name = inputTheme.getText().toString();
+        if (!name.equals("") && name != null){
+            /*toInfoClass.putExtra("adapterMessage", name);
+            startActivity(toInfoClass);*/
+            someEventListener.someEvent(name);
+        }else{
+            Toast.makeText(getActivity(), "поле не заполнено", Toast.LENGTH_SHORT).show();
+        }
+       
+        
     }
 
     public void onDismiss(DialogInterface dialog) {

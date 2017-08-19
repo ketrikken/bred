@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -25,20 +27,19 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
+import com.example.herbal.DialogUpdateActivity.onSomeEventListener;
+import com.example.herbal.DialogCreateActivity.onCreateItemEventListener;
 
 
 
-
-
-public class ThemListActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ThemListActivity extends FragmentActivity implements LoaderManager.LoaderCallbacks<Cursor>, onSomeEventListener, onCreateItemEventListener {
 
     private static final int DELETE_ITEM = 1, UPDATE_ITEM = 2;
     private Database database;
     private ListView lvData;
-    DialogFragment dlg1;
+    DialogFragment dialogChange, dialogCreateItem;
     SimpleCursorAdapter scAdapter;
-    Bundle extras;
-    String mmmmm;
+    private long idItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,9 @@ public class ThemListActivity extends FragmentActivity implements LoaderManager.
 
         database = new Database(this);
         database.open();
-        dlg1 = new DialogUpdateActivity();
+        dialogChange = new DialogUpdateActivity();
+
+        dialogCreateItem = new DialogCreateActivity();
 
         // формируем столбцы сопоставления
         String[] from = new String[] { DBHelper.THEM_NOTE_KEY_HEADER};
@@ -62,17 +65,14 @@ public class ThemListActivity extends FragmentActivity implements LoaderManager.
         registerForContextMenu(lvData);
         getSupportLoaderManager().initLoader(0, null, ThemListActivity.this);
 
+        FAB();
+
     }
+
 
     @Override
     protected void onStart() {
         super.onStart();
-        extras = getIntent().getExtras();
-        if (extras == null) Log.d("mLog", "extras == null");
-        if(extras != null) {
-            mmmmm = extras.getString("adapterMessage");
-            database.UpdateHeaders("1", mmmmm);
-        }
     }
 
     @Override
@@ -95,7 +95,8 @@ public class ThemListActivity extends FragmentActivity implements LoaderManager.
                 database.delFromIdThemeNote(acmi.id);
                 break;
             case UPDATE_ITEM:
-                dlg1.show(getFragmentManager(), "dlg2");
+                idItem = acmi.id;
+                dialogChange.show(getFragmentManager(), "dlg1");
                 break;
         }
             // получаем новый курсор с данными
@@ -105,7 +106,17 @@ public class ThemListActivity extends FragmentActivity implements LoaderManager.
         return true;
 
     }
-
+    private void FAB(){
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.btnAddNewTheme);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "BD is fill in", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                dialogCreateItem.show(getFragmentManager(), "dlg1");
+            }
+        });
+    }
 
 
     protected void onDestroy() {
@@ -130,6 +141,27 @@ public class ThemListActivity extends FragmentActivity implements LoaderManager.
     public void onLoaderReset(Loader<Cursor> loader) {
 
     }
+
+    @Override
+    public void someEvent(String s) {
+        Log.d("mLog", " someEvent ");
+        database.UpdateHeaders(Long.toString(idItem), s);
+        getSupportLoaderManager().getLoader(0).forceLoad();
+    }
+
+    @Override
+    public void createItem(String s) {
+        //добавить проверку существования
+        if (database.findTheme(s) == false){
+            Log.d("mLog", " createItem ");
+            database.addRecTheme(s);
+            getSupportLoaderManager().getLoader(0).forceLoad();
+        }else{
+            Toast.makeText(this, "данная тема уже существует", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     static class MyCursorLoader extends CursorLoader{
 
         Database database;
