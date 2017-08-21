@@ -189,6 +189,24 @@ public class Database {
         cursorr.close();
     }
 
+    public void PrintAllNote()
+    {
+        Cursor cursorr = getAllDataNote();
+        // startManagingCursor(cursorr);
+        Log.d("mLog", "-----------------------------------------");
+        if (cursorr.moveToFirst()) {
+            int idIndex = cursorr.getColumnIndex(DBHelper.EXTERNAL_KEY_ID);
+            int nameIndex = cursorr.getColumnIndex(DBHelper.NOTE_KEY_IMAGE);
+            do {
+                Log.d("mLog", "ID = " + cursorr.getInt(idIndex) +
+                        ", image = " + cursorr.getString(nameIndex));
+            } while (cursorr.moveToNext());
+        } else
+            Log.d("mLog","0 rows");
+
+        cursorr.close();
+    }
+
 
     public void PrintAllTheme()
     {
