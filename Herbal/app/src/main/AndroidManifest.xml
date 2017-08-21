@@ -42,7 +42,8 @@
         <activity android:name=".StartActivity" />
         <activity android:name=".activity_add_note" />
         <activity android:name=".ThemListActivity" />
-        <activity android:name=".DialogUpdateActivity"></activity>
+        <activity android:name=".DialogUpdateActivity" />
+        <activity android:name=".ListNoteActivity"></activity>
     </application>
 
 </manifest>

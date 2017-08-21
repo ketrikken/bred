@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -60,6 +61,7 @@ public class activity_add_note extends AppCompatActivity {
                 .setOpenDialogListener(new OpenFileDialog.OpenDialogListener() {
                     @Override
                     public void OnSelectedFile(String fileName) {
+                        //Log.d("mLog", fileName);
                         Toast.makeText(getApplicationContext(), fileName, Toast.LENGTH_LONG).show();
                         pathToPicture = fileName;
                     }
