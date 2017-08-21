@@ -15,7 +15,7 @@ import java.util.List;
 
     public class DBHelper extends SQLiteOpenHelper {
 
-        public static final int DATABASE_VERSION = 12;
+        public static final int DATABASE_VERSION = 13;
         public static final String DATABASE_NAME = "contactsDB";
 
         public static final String EXTERNAL_KEY_ID = "_id";
@@ -30,6 +30,7 @@ import java.util.List;
         public static final String NOTE_KEY_CREATEDATA = "data";
         public static final String NOTE_KEY_IMAGE = "image";
         public static final String NOTE_KEY_HEADER = "header";
+        public static final String NOTE_KEY_NAME = "name";
 
 
     public static final String TABLE_THEME_NOTE = "theme_note";
@@ -71,10 +72,11 @@ import java.util.List;
             db.execSQL("create table " + TABLE_NOTE + "(" +
                     EXTERNAL_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
                     NOTE_KEY_HEADER + " INTEGER, " +
+                    NOTE_KEY_NAME + " TEXT , " +
                     NOTE_KEY_TEXT + " TEXT, " +
                     NOTE_KEY_IMAGE + " TEXT, " +
-                    NOTE_KEY_CREATEDATA + " text, "+
-                    "FOREIGN KEY (" + NOTE_KEY_HEADER + ") REFERENCES " + TABLE_THEME_NOTE + "(" + EXTERNAL_KEY_ID + ")" + "ON UPDATE SET NULL" + " );");
+                    NOTE_KEY_CREATEDATA + " TEXT, " +
+                    " FOREIGN KEY (" + NOTE_KEY_HEADER + ") REFERENCES " + TABLE_THEME_NOTE + "(" + EXTERNAL_KEY_ID + ")" + "ON UPDATE SET NULL" + " );");
             Log.d("mLog", " --- CREATE NOTE ---- ");
         }
         private void CreateTableThemeNote(SQLiteDatabase db){

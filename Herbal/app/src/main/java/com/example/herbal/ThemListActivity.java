@@ -67,6 +67,16 @@ public class ThemListActivity extends FragmentActivity implements LoaderManager.
 
         FAB();
 
+        lvData.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Intent intent = new Intent(view.getContext(), ListNoteActivity.class);
+                intent.putExtra("id", Long.toString(id));
+                startActivity(intent);
+            }
+        });
+
     }
 
 

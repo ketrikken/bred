@@ -128,6 +128,16 @@ public class Database {
         return database.query(DBHelper.TABLE_NOTE, null, null, null, null, null, null);
     }
 
+    Cursor getDataNoteFromID(String id){
+        return database.query(DBHelper.TABLE_NOTE,
+                null, //список возвращаемых полей
+                DBHelper.NOTE_KEY_HEADER + " = " + id,
+                null,
+                null,
+                null,
+                null);
+    }
+
     Cursor getAllDataThemeNote(){
         return database.query(DBHelper.TABLE_THEME_NOTE, null, null, null, null, null, null);
     }
@@ -240,7 +250,8 @@ public class Database {
 
     public void addRecNote(String text, String image) {
         //, datetime()
-        database.execSQL("INSERT INTO "+ DBHelper.TABLE_NOTE + " VALUES ( null, 1, " + "'"+ text + "'" + ", " + "'"+image+ "'" + ", '11.02.00')");
+        database.execSQL("INSERT INTO "+ DBHelper.TABLE_NOTE + " VALUES ( null, 1, 'имя заметки', "
+                + "'"+ text + "'" + ", " + "'" + image + "'" + ", '11.02.00')");
 
     }
 

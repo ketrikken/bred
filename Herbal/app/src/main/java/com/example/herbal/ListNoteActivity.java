@@ -8,10 +8,12 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,35 +21,33 @@ public class ListNoteActivity extends AppCompatActivity implements LoaderManager
 
 
     private Database database;
-   // private ArrayList<ItemNote> products = new ArrayList<ItemNote>();
-   // private ItemNoteAdapter ItemAdapter;
     SimpleCursorAdapter scAdapter;
-
-
-
-
-
-
-
+    static String _id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_note);
 
+
+        try{
+            _id = getIntent().getStringExtra("id");
+            Toast.makeText(getApplicationContext(), "id: " + _id, Toast.LENGTH_LONG).show();
+
+        } catch(Throwable t) {
+            Toast.makeText(getApplicationContext(), "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
+            Log.d("mLog", "Exception: " + t.toString());
+        }
+
         database = new Database(this);
         database.open();
-        // создаем адаптер
-        //fillData();
-        //ItemAdapter = new ItemNoteAdapter(this, products);
 
-
-
+       // database.addRecNote("какой-то текст", "/storage/sdcard/Herbal/Screenshots/aaa.jpeg");
         database.PrintAllNote();
         scAdapter = new SimpleCursorAdapter(this,
                 R.layout.list_note,
-                database.getAllDataNote(),
-                new String[] {DBHelper.NOTE_KEY_HEADER, DBHelper.NOTE_KEY_CREATEDATA, DBHelper.NOTE_KEY_IMAGE},
+                database.getDataNoteFromID(_id),
+                new String[] {DBHelper.NOTE_KEY_NAME, DBHelper.NOTE_KEY_CREATEDATA, DBHelper.NOTE_KEY_IMAGE},
                 new int[] { R.id.textViewTheme, R.id.textViewData, R.id.imageViewPreview});
 
 
@@ -68,18 +68,10 @@ public class ListNoteActivity extends AppCompatActivity implements LoaderManager
         // настраиваем список
         ListView lvMain = (ListView) findViewById(R.id.listViewNote);
         lvMain.setAdapter(scAdapter);
-
+        getSupportLoaderManager().initLoader(0, null, ListNoteActivity.this);
     }
 
-    // генерируем данные для адаптера
-    /*void fillData() {
-        for (int i = 1; i <= 20; i++) {
-            products.add(new ItemNote(
-                    "Product " + i,
-                    "11.05.1996",
-                    "/storage/sdcard/Herbal/Screenshots/123.jpeg"));
-        }
-    }*/
+
 
     protected void onDestroy() {
         super.onDestroy();
@@ -90,7 +82,7 @@ public class ListNoteActivity extends AppCompatActivity implements LoaderManager
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new ThemListActivity.MyCursorLoader(this, database);
+        return new MyCursorLoader(this, database);
     }
 
     @Override
@@ -114,7 +106,7 @@ public class ListNoteActivity extends AppCompatActivity implements LoaderManager
         @Override
         public Cursor loadInBackground() {
             //return super.loadInBackground();
-            Cursor cursor = database.getAllDataContacts();
+            Cursor cursor = database.getDataNoteFromID(_id);
             return cursor;
         }
 
