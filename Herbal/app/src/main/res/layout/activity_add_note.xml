@@ -6,17 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.example.herbal.activity_add_note"
     android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:background="@drawable/light_back">
 
 
 
         <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/light_back"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <EditText
@@ -45,7 +45,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/textViewCreateData"
-                    android:layout_gravity="right"/>
+                    android:textSize="14dp"
+                    android:textColor="@color/colorIconsBlue"/>
+                    <!--android:layout_gravity="right"-->
 
 
                 <Button

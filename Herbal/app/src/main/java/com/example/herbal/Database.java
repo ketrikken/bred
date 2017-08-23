@@ -223,13 +223,17 @@ public class Database {
         // startManagingCursor(cursorr);
         Log.d("mLog", "-----------------------------------------");
         if (cursorr.moveToFirst()) {
-            int idIndex = cursorr.getColumnIndex(DBHelper.EXTERNAL_KEY_ID);
-            int nameIndex = cursorr.getColumnIndex(DBHelper.NOTE_KEY_IMAGE);
+            int id = cursorr.getColumnIndex(DBHelper.EXTERNAL_KEY_ID);
+            int image = cursorr.getColumnIndex(DBHelper.NOTE_KEY_IMAGE);
             int data = cursorr.getColumnIndex(DBHelper.NOTE_KEY_CREATEDATA);
+            int text = cursorr.getColumnIndex(DBHelper.NOTE_KEY_TEXT);
+            int name = cursorr.getColumnIndex(DBHelper.NOTE_KEY_NAME);
             do {
-                Log.d("mLog", "ID = " + cursorr.getInt(idIndex) +
+                Log.d("mLog", "ID = " + cursorr.getInt(id) +
                         ", data = " + cursorr.getString(data) +
-                        ", image = " + cursorr.getString(nameIndex));
+                        ", image = " + cursorr.getString(image) +
+                        ", text = " + cursorr.getString(text) +
+                        ", name = " + cursorr.getString(name));
             } while (cursorr.moveToNext());
         } else
             Log.d("mLog","0 rows");
@@ -268,13 +272,29 @@ public class Database {
     }
 
 
-    public void addRecNote(String text, String image) {
-        //, datetime()
-        database.execSQL("INSERT INTO "+ DBHelper.TABLE_NOTE + " VALUES ( null, 1, 'имя заметки', "
-                + "'"+ text + "'" + ", " + "'" + image + "'" + ", '11.02.00')");
+    public void addRecNote(Note note) {
+        //id
+        //
+        database.execSQL("INSERT INTO "+ DBHelper.TABLE_NOTE + " VALUES ( " +
+                "null, " +
+                note._parentId + " , " +
+                " ' " + note._theme + " '" + ", " +
+                "'"+ note._text + "'" + ", " +
+                "'" + note._imagePath + "'" +
+                ","  + "' " + note._data + " '" + " )");
 
     }
 
+    public void updateRecNoteFromId(Note note){
+        database.execSQL("UPDATE "+ DBHelper.TABLE_NOTE + " SET " +
+                DBHelper.NOTE_KEY_IMAGE + " = " + "'" + note._imagePath + "' " + ", " +
+                DBHelper.NOTE_KEY_NAME + " = " + "'" + note._theme + "' " + ", " +
+                DBHelper.NOTE_KEY_TEXT + " = " + "'" + note._text + "' "  +
+                " WHERE  " + DBHelper.EXTERNAL_KEY_ID + " = " + note._id + " ;");
+        Log.d("mLog", "update method " +
+            "name = " + note._theme +
+            ", id = " + note._id);
+    }
     public int CountNotes() {
         Cursor cursor = getAllDataNote();
         int res = 0;

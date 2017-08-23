@@ -298,13 +298,14 @@ public class DrawingActivity extends AppCompatActivity
     private void SaveInBD(){
         Toast.makeText(this, name, Toast.LENGTH_SHORT).show();
         String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Herbal/Screenshots" ;
+
         File imgFile = new File(path, name + ".jpeg");
 
         if(imgFile.exists()){
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             if (myBitmap != null) Toast.makeText(getApplicationContext(), "мап не ноль", Toast.LENGTH_SHORT).show();
             //database.delFromImages();
-            database.addRecNote(text[0], imgFile.getAbsolutePath());
+           // database.addRecNote(text[0], imgFile.getAbsolutePath());
         } else {
             Log.d("mLog", "File doesn't exist");
         }
