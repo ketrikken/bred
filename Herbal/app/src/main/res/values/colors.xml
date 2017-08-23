@@ -12,4 +12,5 @@
     <color name="colorIconsGreen">#0a6c0c</color>
     <color name="colorIconsBlue">#2810c6</color>
     <color name="colorTransporent">#00000000</color>
+    <color name="colorTransporent11">#5be9c44d</color>
 </resources>

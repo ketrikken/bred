@@ -31,12 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="add note" />
-        <Button
-            android:id="@+id/ListBdNew"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="ListBdNew" />
+
 
     </LinearLayout>
     <LinearLayout
@@ -45,11 +40,10 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/ListNote"
+            android:id="@+id/ListBdNew"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="ListNote" />
-
+            android:text="ListBdNew" />
     </LinearLayout>
 </LinearLayout>

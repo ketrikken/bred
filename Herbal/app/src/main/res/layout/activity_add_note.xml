@@ -29,9 +29,10 @@
                     android:gravity="center_horizontal"/>
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/imageViewLoadedFromMemory"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="230dp"
+                    android:gravity="center_horizontal"/>
 
 
                 <EditText
@@ -46,6 +47,13 @@
                     android:id="@+id/textViewCreateData"
                     android:layout_gravity="right"/>
 
+
+                <Button
+                    android:id="@+id/buttonSaveNote"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorTransporent11"
+                    android:text="Сохранить" />
             </LinearLayout>
 
         </ScrollView>

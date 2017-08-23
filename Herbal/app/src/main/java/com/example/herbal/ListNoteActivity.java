@@ -1,6 +1,7 @@
 package com.example.herbal;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -46,7 +48,7 @@ public class ListNoteActivity extends AppCompatActivity implements LoaderManager
         database.PrintAllNote();
         scAdapter = new SimpleCursorAdapter(this,
                 R.layout.list_note,
-                database.getDataNoteFromID(_id),
+                database.getDataNoteFromIDTheme(_id),
                 new String[] {DBHelper.NOTE_KEY_NAME, DBHelper.NOTE_KEY_CREATEDATA, DBHelper.NOTE_KEY_IMAGE},
                 new int[] { R.id.textViewTheme, R.id.textViewData, R.id.imageViewPreview});
 
@@ -69,6 +71,25 @@ public class ListNoteActivity extends AppCompatActivity implements LoaderManager
         ListView lvMain = (ListView) findViewById(R.id.listViewNote);
         lvMain.setAdapter(scAdapter);
         getSupportLoaderManager().initLoader(0, null, ListNoteActivity.this);
+
+        lvMain.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                database.delNoteFromId(Long.toString(id));
+                getSupportLoaderManager().getLoader(0).forceLoad();
+                return false;
+            }
+        });
+
+
+        lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(view.getContext(), activity_add_note.class);
+                intent.putExtra("id", Long.toString(id));
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -106,7 +127,7 @@ public class ListNoteActivity extends AppCompatActivity implements LoaderManager
         @Override
         public Cursor loadInBackground() {
             //return super.loadInBackground();
-            Cursor cursor = database.getDataNoteFromID(_id);
+            Cursor cursor = database.getDataNoteFromIDTheme(_id);
             return cursor;
         }
 

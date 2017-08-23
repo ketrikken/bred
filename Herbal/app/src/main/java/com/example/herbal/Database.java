@@ -119,6 +119,11 @@ public class Database {
         database.delete(DBHelper.TABLE_NOTE, DBHelper.EXTERNAL_KEY_ID + " >= 0" , null);
     }
 
+    void delNoteFromId(String id){
+        database.delete(DBHelper.TABLE_NOTE, DBHelper.EXTERNAL_KEY_ID + " = " + id , null);
+    }
+
+
     // получить все данные из таблицы DB_TABLE
     Cursor getAllDataContacts() {
         return database.query(DBHelper.TABLE_CONTACTS, null, null, null, null, null, null);
@@ -128,7 +133,9 @@ public class Database {
         return database.query(DBHelper.TABLE_NOTE, null, null, null, null, null, null);
     }
 
-    Cursor getDataNoteFromID(String id){
+
+
+    Cursor getDataNoteFromIDTheme(String id){
         return database.query(DBHelper.TABLE_NOTE,
                 null, //список возвращаемых полей
                 DBHelper.NOTE_KEY_HEADER + " = " + id,
@@ -137,6 +144,17 @@ public class Database {
                 null,
                 null);
     }
+    Cursor getOneNoteFromID(String id){
+        Log.d("mLog", id);
+        return database.query(DBHelper.TABLE_NOTE,
+                null, //список возвращаемых полей
+                DBHelper.EXTERNAL_KEY_ID + " = " + id,
+                null,
+                null,
+                null,
+                null);
+    }
+
 
     Cursor getAllDataThemeNote(){
         return database.query(DBHelper.TABLE_THEME_NOTE, null, null, null, null, null, null);
@@ -207,8 +225,10 @@ public class Database {
         if (cursorr.moveToFirst()) {
             int idIndex = cursorr.getColumnIndex(DBHelper.EXTERNAL_KEY_ID);
             int nameIndex = cursorr.getColumnIndex(DBHelper.NOTE_KEY_IMAGE);
+            int data = cursorr.getColumnIndex(DBHelper.NOTE_KEY_CREATEDATA);
             do {
                 Log.d("mLog", "ID = " + cursorr.getInt(idIndex) +
+                        ", data = " + cursorr.getString(data) +
                         ", image = " + cursorr.getString(nameIndex));
             } while (cursorr.moveToNext());
         } else
