@@ -21,10 +21,6 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         btnList = (Button) findViewById(R.id.buttonList);
         btnList.setOnClickListener(this);
 
-       /* btnAddNote = (Button) findViewById(R.id.buttonAddNote);
-        btnAddNote.setOnClickListener(this);*/
-
-
         btn = (Button)findViewById(R.id.ListBdNew);
         btn.setOnClickListener(this);
 
@@ -42,10 +38,6 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 intent = new Intent(v.getContext(), MainActivity.class);
                 startActivity(intent);
                 break;
-            /*case R.id.buttonAddNote:
-                intent = new Intent(v.getContext(), activity_add_note.class);
-                startActivity(intent);
-                break;*/
             case R.id.ListBdNew:
                 intent = new Intent(v.getContext(), ThemListActivity.class);
                 startActivity(intent);

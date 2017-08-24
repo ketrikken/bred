@@ -1,5 +1,6 @@
 package com.example.herbal;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,14 +31,7 @@ import java.util.Date;
 
 public class activity_add_note extends AppCompatActivity {
 
-  /*  public interface onChangeNoteEventListener {
-        public void createNote(Note note);
-        public void updateNote(Note note);
-    }
 
-    onChangeNoteEventListener ChangeNoteEventListener;*/
-
-   // private String _parentId, _currentId;
     private Note currentNote;
     private Database database;
     private EditText noteMainText, noteTheme;
@@ -66,18 +60,9 @@ public class activity_add_note extends AppCompatActivity {
             public void onClick(View v) {
 
                 UpdateFileds();
-                if (currentNote._id == null || currentNote._id.equals(""))
-                {
-                    // сохраняем новую запись
-                    // не тестено
-                    database.addRecNote(currentNote);
-                    //ChangeNoteEventListener.createNote(currentNote);
-                }else {
-                    // изменяем текущую
-                    database.updateRecNoteFromId(currentNote);
-                    Log.d("mLog", currentNote._id + " " + currentNote._theme);
-                    //ChangeNoteEventListener.updateNote(currentNote);
-                }
+                Intent intent = new Intent();
+                intent.putExtra(Note.class.getCanonicalName(), currentNote);
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });

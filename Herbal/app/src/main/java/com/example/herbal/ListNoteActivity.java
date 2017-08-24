@@ -26,7 +26,7 @@ public class ListNoteActivity extends AppCompatActivity implements LoaderManager
     private Database database;
     SimpleCursorAdapter scAdapter;
     static String _id;
-
+    int REQUEST_CODE = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,11 +91,23 @@ public class ListNoteActivity extends AppCompatActivity implements LoaderManager
 
                 sentNote = ParseCursorNote(database.getOneNoteFromID(Long.toString(id)));
                 intent.putExtra(Note.class.getCanonicalName(), sentNote);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
 
 
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+
+            Note note = data.getParcelableExtra(Note.class.getCanonicalName());
+            if (note == null) return;
+            if (note._id == null) database.addRecNote(note);
+            else database.updateRecNoteFromId(note);
+        }
     }
 
     @Override
@@ -140,20 +152,7 @@ public class ListNoteActivity extends AppCompatActivity implements LoaderManager
     public void onLoaderReset(Loader<Cursor> loader) {
 
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  /*  @Override
-    public void createNote(Note note) {
-        database.addRecNote(note, _id);
-        getSupportLoaderManager().getLoader(0).forceLoad();
-    }
 
-    @Override
-    public void updateNote(Note note) {
-        database.updateRecNoteFromId(note);
-        getSupportLoaderManager().getLoader(0).forceLoad();
-    }
-*/
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     static class MyCursorLoader extends android.support.v4.content.CursorLoader{
 
         Database database;
