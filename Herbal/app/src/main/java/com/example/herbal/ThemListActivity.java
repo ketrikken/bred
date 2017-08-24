@@ -100,7 +100,6 @@ public class ThemListActivity extends FragmentActivity implements LoaderManager.
                 .getMenuInfo();
         switch (item.getItemId()){
             case DELETE_ITEM:
-                Toast.makeText(this, "удали их нажато", Toast.LENGTH_SHORT).show();
                 // извлекаем id записи и удаляем соответствующую запись в БД
                 database.delFromIdThemeNote(acmi.id);
                 break;
@@ -155,8 +154,12 @@ public class ThemListActivity extends FragmentActivity implements LoaderManager.
     @Override
     public void someEvent(String s) {
         Log.d("mLog", " someEvent ");
-        database.UpdateHeaders(Long.toString(idItem), s);
-        getSupportLoaderManager().getLoader(0).forceLoad();
+        if (database.findTheme(s) == false) {
+            database.UpdateHeaders(Long.toString(idItem), s);
+            getSupportLoaderManager().getLoader(0).forceLoad();
+        }else{
+        Toast.makeText(this, "данная тема уже существует", Toast.LENGTH_SHORT).show();
+    }
     }
 
     @Override

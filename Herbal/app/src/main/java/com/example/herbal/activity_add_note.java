@@ -33,7 +33,6 @@ public class activity_add_note extends AppCompatActivity {
 
 
     private Note currentNote;
-    private Database database;
     private EditText noteMainText, noteTheme;
     private TextView noteData;
     private Button btnSave;
@@ -44,8 +43,7 @@ public class activity_add_note extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
 
-        database = new Database(this);
-        database.open();
+
 
         noteData = (TextView) findViewById(R.id.textViewCreateData);
         noteMainText = (EditText) findViewById(R.id.editTextNodeMainInformation);
@@ -70,12 +68,6 @@ public class activity_add_note extends AppCompatActivity {
         FillInForm();
         FAB();
     }
-
-    protected void onDestroy() {
-        super.onDestroy();
-        database.close();
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -128,21 +120,22 @@ public class activity_add_note extends AppCompatActivity {
         //currentNote = ParseCursorNote(database.getOneNoteFromID(_currentId));
         currentNote = (Note) getIntent().getParcelableExtra(
                 Note.class.getCanonicalName());
-        if (currentNote._id == null || currentNote._id.equals("")){
-            SetCurrentData();
-            return;
-        }
 
-
-        noteMainText.setText(currentNote._text);
-        noteTheme.setText(currentNote._theme);
-        noteData.setText(currentNote._data);
-        if (!CheckImagePath(currentNote._imagePath)){
+        if (currentNote._imagePath == null || !CheckImagePath(currentNote._imagePath)){
             currentNote._imagePath = null;
             SetDefaultImage();
         }else{
             SetImageFromBD();
         }
+        if (currentNote._id == null || currentNote._id.equals("")){
+            SetCurrentData();
+            return;
+        }
+
+        noteMainText.setText(currentNote._text);
+        noteTheme.setText(currentNote._theme);
+        noteData.setText(currentNote._data);
+
 
     }
     void UpdateFileds(){
@@ -172,9 +165,12 @@ public class activity_add_note extends AppCompatActivity {
         int yy = c.get(Calendar.YEAR);
         int mm = c.get(Calendar.MONTH);
         int dd = c.get(Calendar.DAY_OF_MONTH);
+        String k = "", k1 = "";
+        if (dd < 10) k = "0";
+        if (mm + 1 < 10) k1 = "0";
         noteData.setText(new StringBuilder()
-                .append(yy).append(" ").append("-").append(mm + 1).append("-")
-                .append(dd));
+                .append(dd).append(".").append(k1).append(mm + 1).append(".")
+                .append(k).append(yy));
         currentNote._data = noteData.getText().toString();
     }
 }

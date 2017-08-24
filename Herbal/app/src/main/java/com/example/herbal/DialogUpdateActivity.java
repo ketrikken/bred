@@ -73,6 +73,7 @@ public class DialogUpdateActivity extends DialogFragment implements View.OnClick
     private void Update()
     {
         String name = inputTheme.getText().toString();
+        Log.d("mLog", "name string = '" + name + "'");
         if (!name.equals("") && name != null){
             /*toInfoClass.putExtra("adapterMessage", name);
             startActivity(toInfoClass);*/

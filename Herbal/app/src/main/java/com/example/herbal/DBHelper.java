@@ -15,7 +15,7 @@ import java.util.List;
 
     public class DBHelper extends SQLiteOpenHelper {
 
-        public static final int DATABASE_VERSION = 13;
+        public static final int DATABASE_VERSION = 14;
         public static final String DATABASE_NAME = "contactsDB";
 
         public static final String EXTERNAL_KEY_ID = "_id";
@@ -76,7 +76,7 @@ import java.util.List;
                     NOTE_KEY_TEXT + " TEXT, " +
                     NOTE_KEY_IMAGE + " TEXT, " +
                     NOTE_KEY_CREATEDATA + " TEXT, " +
-                    " FOREIGN KEY (" + NOTE_KEY_HEADER + ") REFERENCES " + TABLE_THEME_NOTE + "(" + EXTERNAL_KEY_ID + ")" + "ON UPDATE SET NULL" + " );");
+                    " FOREIGN KEY (" + NOTE_KEY_HEADER + ") REFERENCES " + TABLE_THEME_NOTE + "(" + EXTERNAL_KEY_ID + ")" + "ON DELETE CASCADE" + " );");
             Log.d("mLog", " --- CREATE NOTE ---- ");
         }
         private void CreateTableThemeNote(SQLiteDatabase db){

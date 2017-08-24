@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -96,8 +97,27 @@ public class ListNoteActivity extends AppCompatActivity implements LoaderManager
 
             }
         });
+        FAB();
     }
+    private void FAB(){
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.btnAddNewNote);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), activity_add_note.class);
 
+                Note note = new Note();
+
+                note._parentId = sentNote._parentId;
+
+
+
+                intent.putExtra(Note.class.getCanonicalName(), note);
+                startActivityForResult(intent, REQUEST_CODE);
+
+            }
+        });
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

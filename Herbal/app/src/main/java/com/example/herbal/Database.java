@@ -310,12 +310,12 @@ public class Database {
         return res;
     }
     public void UpdateHeaders(String id, String name){
-        database.execSQL("UPDATE "+ DBHelper.TABLE_THEME_NOTE + " SET " + DBHelper.THEM_NOTE_KEY_HEADER + " = " +  " ' " + name + " ' "  + " where " + DBHelper.EXTERNAL_KEY_ID + " =" + id + " ;");
+        database.execSQL("UPDATE "+ DBHelper.TABLE_THEME_NOTE + " SET " + DBHelper.THEM_NOTE_KEY_HEADER + " = " +  " '" + name + "' "  + " where " + DBHelper.EXTERNAL_KEY_ID + " =" + id + " ;");
         PrintAllTheme();
     }
 
     public void UpdatePersonsNames(String id, String name){
-        database.execSQL("UPDATE "+ DBHelper.TABLE_CONTACTS + " SET " + DBHelper.CONTACTS_KEY_NAME + " = " + "' " + name + " ' " + " where " + DBHelper.EXTERNAL_KEY_ID + " =" + id + " ;");
+        database.execSQL("UPDATE "+ DBHelper.TABLE_CONTACTS + " SET " + DBHelper.CONTACTS_KEY_NAME + " = " + "'" + name + "' " + " where " + DBHelper.EXTERNAL_KEY_ID + " =" + id + " ;");
         PrintAllContacts();
     }
 
