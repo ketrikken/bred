@@ -109,9 +109,6 @@ public class ListNoteActivity extends AppCompatActivity implements LoaderManager
                 Note note = new Note();
 
                 note._parentId = sentNote._parentId;
-
-
-
                 intent.putExtra(Note.class.getCanonicalName(), note);
                 startActivityForResult(intent, REQUEST_CODE);
 

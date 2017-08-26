@@ -2,6 +2,7 @@ package com.example.herbal;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,15 +43,17 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class DrawingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnTouchListener, View.OnClickListener{
 
+    String[] type = {"droids"};
 
-    String[] text = { "первый пошел", "второе описание", "описание петра", "что-то про антона", "Даша", "Борис",
-            "Костя", "Игорь", "Анна", "Денис", "сраный иван" };
+    private SparseArrayCompat<Integer> mapForNewNote;
 
     private Integer markIdImage;
     private ImageView imageDel;
@@ -69,6 +72,9 @@ public class DrawingActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing);
+
+    // хранится тип и количество данного типа
+        mapForNewNote = new SparseArrayCompat<Integer>();
 
         InitOnCreate();
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,7 +123,22 @@ public class DrawingActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_send_used_runes) {
+
+            // преобразуем в текст и отправляем интентом
+            String text = new String();
+            for (int i = 0; i < mapForNewNote.size(); ++i){
+                if (mapForNewNote.get(i) < 0 || mapForNewNote.get(i) == null) continue;
+                text += type[i] + ": " + mapForNewNote.get(i);
+            }
+            Log.d("mLog", text);
+            Intent intent = new Intent(getApplicationContext(), activity_add_note.class);
+            Note note = new Note();
+            note._parentId = "12";
+            note._text = text;
+            intent.putExtra(Note.class.getCanonicalName(), note);
+            startActivity(intent);
+
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -129,7 +150,7 @@ public class DrawingActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            NavCamera();
+            NavCamera(0);
         }else if (id == R.id.colorRad){
             SetFilterIcons(R.color.colorIconsRad);
         }else if (id == R.id.colorNone){
@@ -181,10 +202,13 @@ public class DrawingActivity extends AppCompatActivity
                 yy = v.getTop();
                 if (  xx > leftX && yy < bottomY) {
                     try {
+
                         //получаем родительский view и удаляем его
                         ((RelativeLayout) v.getParent()).removeView(v);
                         //удаляем эту же запись из массива что бы не оставалось мертвых записей
+                        mapForNewNote.remove(mapGeneratedImage.get(id)._type);
                         mapGeneratedImage.remove(id);
+
                     } catch(IndexOutOfBoundsException ex) {
                         Toast.makeText(this, "не удалилось", Toast.LENGTH_SHORT).show();
                     }
@@ -242,8 +266,6 @@ public class DrawingActivity extends AppCompatActivity
     };
 
     void saveData() {
-
-
         name = textt.getText().toString();
         if(bitmap != null && name != null){
 
@@ -334,7 +356,7 @@ public class DrawingActivity extends AppCompatActivity
         }
         return true;
     }
-    private void NavCamera(){
+    private void NavCamera(int id){
         // Handle the camera action
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(Constants.START_POSITION, Constants.START_POSITION);
         View view = getLayoutInflater().inflate(R.layout.im_view, null);
@@ -342,13 +364,18 @@ public class DrawingActivity extends AppCompatActivity
 
         (view.findViewById(R.id.imm)).setId(idForNewItem);
 
-        mapGeneratedImage.put(idForNewItem, new ParametersGeneratedImage(view));
+        mapGeneratedImage.put(idForNewItem, new ParametersGeneratedImage(view, id));
+        int temp = 1;
+        if (mapForNewNote.get(mapGeneratedImage.get(idForNewItem)._type) != null)
+            temp = mapForNewNote.get(mapGeneratedImage.get(idForNewItem)._type) + 1;
+        mapForNewNote.put(mapGeneratedImage.get(idForNewItem)._type, temp);
+
         relativeMoveLayout.addView(view);
 
         view.setOnClickListener(this);
         view.setOnTouchListener(this);
 
-
+        Toast.makeText(getApplicationContext(), "count droids: " + temp, Toast.LENGTH_SHORT).show();
         Toast.makeText(getApplicationContext(), "id: " + view.getId(), Toast.LENGTH_SHORT).show();
         idForNewItem++;
     }

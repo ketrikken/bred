@@ -9,11 +9,13 @@ import java.lang.reflect.Constructor;
  */
 
 public class ParametersGeneratedImage {
-   ParametersGeneratedImage(View v){
+   ParametersGeneratedImage(View v, int type){
        view = v;
        coordinateX = 0;
        coordinateY = 0;
+       _type = type;
    }
     public int coordinateX, coordinateY;
     public View view;
+    public int _type;
 }

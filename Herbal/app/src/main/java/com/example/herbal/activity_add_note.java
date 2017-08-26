@@ -37,6 +37,7 @@ public class activity_add_note extends AppCompatActivity {
     private TextView noteData;
     private Button btnSave;
     private ImageView noteImage;
+    private Database database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +51,8 @@ public class activity_add_note extends AppCompatActivity {
         noteTheme = (EditText) findViewById(R.id.headerText);
         btnSave = (Button) findViewById(R.id.buttonSaveNote);
         noteImage = (ImageView)findViewById(R.id.imageViewLoadedFromMemory);
-
+        database = new Database(this);
+        database.open();
 
 
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -58,9 +60,16 @@ public class activity_add_note extends AppCompatActivity {
             public void onClick(View v) {
 
                 UpdateFileds();
-                Intent intent = new Intent();
-                intent.putExtra(Note.class.getCanonicalName(), currentNote);
-                setResult(RESULT_OK, intent);
+                //Intent intent = new Intent();
+                //intent.putExtra(Note.class.getCanonicalName(), currentNote);
+                //setResult(RESULT_OK, intent);
+                if (currentNote != null){
+                    Log.d("mLog", "add note currentNote != null ");
+                    if (currentNote._id == null) database.addRecNote(currentNote);
+                    else database.updateRecNoteFromId(currentNote);
+                    database.PrintAllNote();
+                }
+
                 finish();
             }
         });
@@ -129,6 +138,9 @@ public class activity_add_note extends AppCompatActivity {
         }
         if (currentNote._id == null || currentNote._id.equals("")){
             SetCurrentData();
+        }
+        if (currentNote._text != null){
+            noteMainText.setText(currentNote._text);
             return;
         }
 
@@ -172,5 +184,9 @@ public class activity_add_note extends AppCompatActivity {
                 .append(dd).append(".").append(k1).append(mm + 1).append(".")
                 .append(k).append(yy));
         currentNote._data = noteData.getText().toString();
+    }
+    protected void onDestroy() {
+        super.onDestroy();
+        database.close();
     }
 }
