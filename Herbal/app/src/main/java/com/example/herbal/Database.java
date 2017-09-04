@@ -118,7 +118,9 @@ public class Database {
     void delFromImages() {
         database.delete(DBHelper.TABLE_NOTE, DBHelper.EXTERNAL_KEY_ID + " >= 0" , null);
     }
-
+    void delFromFigurs() {
+        database.delete(DBHelper.TABLE_FIGURS, DBHelper.EXTERNAL_KEY_ID + " >= 0" , null);
+    }
     void delNoteFromId(String id){
         database.delete(DBHelper.TABLE_NOTE, DBHelper.EXTERNAL_KEY_ID + " = " + id , null);
     }
@@ -159,7 +161,9 @@ public class Database {
     Cursor getAllDataThemeNote(){
         return database.query(DBHelper.TABLE_THEME_NOTE, null, null, null, null, null, null);
     }
-
+    Cursor getAllDataFigurs(){
+        return database.query(DBHelper.TABLE_FIGURS, null, null, null, null, null, null);
+    }
     void addRecTheme(String text){
         database.execSQL("INSERT INTO "+ DBHelper.TABLE_THEME_NOTE + " VALUES ( null, " + "'" + text + "' );");
         PrintAllTheme();
@@ -262,6 +266,39 @@ public class Database {
 
 
 
+    public void printFigurs()
+    {
+        Cursor cursorr = getAllDataFigurs();
+        // startManagingCursor(cursorr);
+        Log.d("mLog", "----------------Figurs-------------------------");
+        if (cursorr.moveToFirst()) {
+            int idIndex = cursorr.getColumnIndex(DBHelper.EXTERNAL_KEY_ID);
+            int parent = cursorr.getColumnIndex(DBHelper.FIGURS_ID_PICTURE);
+            int color = cursorr.getColumnIndex(DBHelper.FIGURS_COLOR);
+            int rotation = cursorr.getColumnIndex(DBHelper.FIGURS_ROTATION);
+            int xx = cursorr.getColumnIndex(DBHelper.FIGURS_COORD_X);
+            int yy = cursorr.getColumnIndex(DBHelper.FIGURS_COORD_Y);
+            int start_x = cursorr.getColumnIndex(DBHelper.FIGURS_START_COORD_X);
+            int start_y = cursorr.getColumnIndex(DBHelper.FIGURS_START_COORD_Y);
+            do {
+                Log.d("mLog", "ID = " + cursorr.getInt(idIndex) +
+                        ", parent = " + cursorr.getString(parent) +
+                        ", color = " + cursorr.getString(color) +
+                        ", x = " + cursorr.getString(xx) +
+                        ", y = " + cursorr.getString(yy) +
+                        ", start x = " + cursorr.getString(start_x) +
+                        ", start y = " + cursorr.getString(start_y) +
+                        ", rotation = " + cursorr.getString(rotation));
+            } while (cursorr.moveToNext());
+        } else
+            Log.d("mLog","0 rows");
+
+        cursorr.close();
+    }
+
+
+
+
 
     // добавить запись в DB_TABLE
     public void addRecContacts(String name, String email) {
@@ -284,6 +321,30 @@ public class Database {
                 ","  + "' " + note._data + " '" + " )");
 
     }
+
+
+    public void insertFigure(ParametersGeneratedImage image, int parent) {
+        //id
+        //
+        database.execSQL("INSERT INTO "+ DBHelper.TABLE_FIGURS + " VALUES ( " +
+                "null, " +
+                parent + " , " +
+                image._type + ", " +
+                "'"+ image._rotation + "'" + ", " +
+                image._color + ", "  +
+                image.startPosX + ", "  +
+                image.startPosY  + ", "  +
+                image.coordinateX + ", "  +
+                image.coordinateY  +
+                " )");
+
+    }
+
+
+
+
+
+
 
     public void updateRecNoteFromId(Note note){
         database.execSQL("UPDATE "+ DBHelper.TABLE_NOTE + " SET " +

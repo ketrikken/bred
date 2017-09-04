@@ -15,7 +15,7 @@ import java.util.List;
 
     public class DBHelper extends SQLiteOpenHelper {
 
-        public static final int DATABASE_VERSION = 14;
+        public static final int DATABASE_VERSION = 18;
         public static final String DATABASE_NAME = "contactsDB";
 
         public static final String EXTERNAL_KEY_ID = "_id";
@@ -36,7 +36,15 @@ import java.util.List;
     public static final String TABLE_THEME_NOTE = "theme_note";
         public static final String THEM_NOTE_KEY_HEADER = "header";
 
-
+    public static final String TABLE_FIGURS = "figrs";
+        public static final String FIGURS_ID_PICTURE = "id_parent";
+        public static final String FIGURS_ID = "id_picture";
+        public static final String FIGURS_ROTATION = "rotation";
+        public static final String FIGURS_COLOR = "color";
+        public static final String FIGURS_COORD_X = "coord_x";
+        public static final String FIGURS_COORD_Y = "coord_y";
+        public static final String FIGURS_START_COORD_X = "start_coord_x";
+        public static final String FIGURS_START_COORD_Y = "start_coord_y";
 
        /* public DBHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -50,6 +58,7 @@ import java.util.List;
             CreateContacts(db);
             CreateTableThemeNote(db);
             CreateTableNote(db);
+            CreateTableFigurs(db);
             db.execSQL("insert into " + TABLE_THEME_NOTE + " VALUES (null, 'первая тема заметки');");
         }
 
@@ -62,6 +71,7 @@ import java.util.List;
                     db.execSQL("drop table if exists " + TABLE_CONTACTS);
                     db.execSQL("drop table if exists " + TABLE_NOTE);
                     db.execSQL("drop table if exists " + TABLE_THEME_NOTE);
+                    db.execSQL("drop table if exists " + TABLE_FIGURS);
                     onCreate(db);
 
             }
@@ -79,6 +89,25 @@ import java.util.List;
                     " FOREIGN KEY (" + NOTE_KEY_HEADER + ") REFERENCES " + TABLE_THEME_NOTE + "(" + EXTERNAL_KEY_ID + ")" + "ON DELETE CASCADE" + " );");
             Log.d("mLog", " --- CREATE NOTE ---- ");
         }
+
+
+    private void CreateTableFigurs(SQLiteDatabase db){
+        db.execSQL("create table " + TABLE_FIGURS + "(" +
+                EXTERNAL_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                FIGURS_ID_PICTURE + " INTEGER, " +
+                FIGURS_ID + " INTEGER, " +
+                FIGURS_ROTATION + " TEXT, " +
+                FIGURS_COLOR + " TEXT, " +
+                FIGURS_START_COORD_X + " INTEGER, " +
+                FIGURS_START_COORD_Y + " INTEGER, " +
+                FIGURS_COORD_X + " INTEGER, " +
+                FIGURS_COORD_Y + " INTEGER " +
+                " );");
+        Log.d("mLog", " --- CREATE NOTE ---- ");
+    }
+
+
+
         private void CreateTableThemeNote(SQLiteDatabase db){
         db.execSQL("create table " + TABLE_THEME_NOTE + "(" +
                 EXTERNAL_KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +

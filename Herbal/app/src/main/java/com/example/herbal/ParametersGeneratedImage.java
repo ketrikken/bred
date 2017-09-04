@@ -10,12 +10,27 @@ import java.lang.reflect.Constructor;
 
 public class ParametersGeneratedImage {
    ParametersGeneratedImage(View v, int type){
-       view = v;
-       coordinateX = 0;
-       coordinateY = 0;
-       _type = type;
-   }
+        view = v;
+        coordinateX = 0;
+        coordinateY = 0;
+        _rotation = 0;
+        _color = -5;
+        _type = type;
+    }
+    ParametersGeneratedImage(View v, int type, float rotation, int color, int xStart, int yStart, int x, int y){
+        view = v;
+        startPosX = xStart;
+        startPosY = yStart;
+        coordinateX = x;
+        coordinateY = y;
+        _rotation = rotation;
+        _color = color;
+        _type = type;
+    }
     public int coordinateX, coordinateY;
     public View view;
     public int _type;
+    public int _color;
+    public float _rotation;
+    public int startPosX, startPosY;
 }

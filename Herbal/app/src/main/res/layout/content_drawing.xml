@@ -14,7 +14,9 @@
         android:id="@+id/drawingGreed"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@drawable/light_back">
+        android:background="@drawable/light_back"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
 
         <ImageView
@@ -25,7 +27,7 @@
             android:layout_weight="1"
             app:srcCompat="@android:drawable/ic_delete" />
 
-      <!--  <ZoomControls
+        <!--  <ZoomControls
             android:id="@+id/btnZoom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,24 +38,24 @@
             android:id="@+id/btnRotate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/imageDel"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:layout_alignStart="@+id/imageDel"
             android:layout_below="@+id/imageDel"
             android:layout_marginTop="11dp"
             android:background="@color/colorTransporent"
-            app:srcCompat="@drawable/ic_drawing_rotate"
-            android:layout_alignLeft="@+id/imageDel"
-            android:layout_alignStart="@+id/imageDel" />
+            app:srcCompat="@drawable/ic_drawing_rotate" />
 
         <ImageButton
             android:id="@+id/imageButtonPlus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorTransporent"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="4dp"
             android:layout_marginBottom="15dp"
+            android:layout_marginRight="4dp"
+            android:background="@color/colorTransporent"
             app:srcCompat="@drawable/ic_plus" />
 
         <ImageButton
@@ -61,36 +63,57 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/imageButtonPlus"
-            android:background="@color/colorTransporent"
             android:layout_alignLeft="@+id/imageButtonPlus"
             android:layout_alignStart="@+id/imageButtonPlus"
             android:layout_marginBottom="15dp"
+            android:background="@color/colorTransporent"
             app:srcCompat="@drawable/ic_minus" />
-
 
 
         <ImageButton
             android:id="@+id/imageButtonGetScreen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/btnRotate"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:background="@color/colorTransporent"
+            android:layout_alignStart="@+id/btnRotate"
             android:layout_below="@+id/btnRotate"
             android:layout_marginTop="14dp"
-            app:srcCompat="@drawable/ic_menu_camera"
-            android:layout_alignLeft="@+id/btnRotate"
-            android:layout_alignStart="@+id/btnRotate" />
+            android:background="@color/colorTransporent"
+            app:srcCompat="@drawable/ic_menu_camera" />
 
-     <!--   <ImageButton
-            android:id="@+id/imageButtonBD"
+        <Button
+            android:id="@+id/button_SaveInDB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
             android:layout_below="@+id/imageButtonGetScreen"
+            android:layout_marginEnd="37dp"
+            android:layout_marginRight="37dp"
             android:layout_marginTop="89dp"
-            app:srcCompat="@drawable/ic_menu_gallery" />-->
+            android:layout_toLeftOf="@+id/imageButtonGetScreen"
+            android:layout_toStartOf="@+id/imageButtonGetScreen"
+            android:text="save" />
+
+        <Button
+            android:id="@+id/button_openFromBD"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/button_SaveInDB"
+            android:layout_alignStart="@+id/button_SaveInDB"
+            android:layout_below="@+id/button_SaveInDB"
+            android:layout_marginTop="46dp"
+            android:text="Button open" />
+
+        <!--   <ImageButton
+               android:id="@+id/imageButtonBD"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_alignParentEnd="true"
+               android:layout_alignParentRight="true"
+               android:layout_below="@+id/imageButtonGetScreen"
+               android:layout_marginTop="89dp"
+               app:srcCompat="@drawable/ic_menu_gallery" />-->
 
 
     </RelativeLayout>

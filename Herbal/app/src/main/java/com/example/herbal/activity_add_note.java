@@ -59,10 +59,10 @@ public class activity_add_note extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                UpdateFileds();
+                //UpdateFileds();
                 //Intent intent = new Intent();
                 //intent.putExtra(Note.class.getCanonicalName(), currentNote);
-                //setResult(RESULT_OK, intent);
+               // setResult(RESULT_OK, intent);
                 if (currentNote != null){
                     Log.d("mLog", "add note currentNote != null ");
                     if (currentNote._id == null) database.addRecNote(currentNote);

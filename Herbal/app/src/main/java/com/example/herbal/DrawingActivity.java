@@ -68,10 +68,83 @@ public class DrawingActivity extends AppCompatActivity
     private  GetScreen screen;
     private String name;
 
+    private Button btnSave, btnOpen;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing);
+
+        btnSave = (Button) findViewById(R.id.button_SaveInDB);
+        btnSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                database.delFromFigurs();
+                for (int i = 0; i < mapGeneratedImage.size(); ++i){
+                    database.insertFigure(mapGeneratedImage.get(mapGeneratedImage.keyAt(i)), 1);
+                }
+            }
+        });
+
+        btnOpen = (Button) findViewById(R.id.button_openFromBD);
+        btnOpen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                database.printFigurs();
+                Cursor cursor = database.getAllDataFigurs();
+
+                // очистить все переменные
+                mapGeneratedImage.clear();
+                idForNewItem = 0;
+                /////////////////////////
+
+
+                if (cursor.moveToFirst()) {
+
+                    do {
+                        int c_type = cursor.getInt(cursor.getColumnIndex(DBHelper.FIGURS_ID_PICTURE));
+                        float c_rotation = cursor.getFloat(cursor.getColumnIndex(DBHelper.FIGURS_ROTATION));
+                        int c_color = cursor.getInt(cursor.getColumnIndex(DBHelper.FIGURS_COLOR));
+                        int c_x_start = cursor.getInt(cursor.getColumnIndex(DBHelper.FIGURS_START_COORD_X));
+                        int c_y_start = cursor.getInt(cursor.getColumnIndex(DBHelper.FIGURS_START_COORD_Y));
+                        int c_x = cursor.getInt(cursor.getColumnIndex(DBHelper.FIGURS_COORD_X));
+                        int c_y = cursor.getInt(cursor.getColumnIndex(DBHelper.FIGURS_COORD_Y));
+
+
+                        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(Constants.START_POSITION, Constants.START_POSITION);
+                        View view = getLayoutInflater().inflate(R.layout.im_view, null);
+
+
+                        (view.findViewById(R.id.imm)).setId(idForNewItem);
+                        view.setRotation(c_rotation);
+                        layoutParams.leftMargin = c_x_start;
+                        layoutParams.topMargin = c_y_start;
+                        layoutParams.bottomMargin = 0 - (int)1e5 ;
+                        layoutParams.rightMargin = 0 - (int)1e5 ;
+                        view.setLayoutParams(layoutParams);
+
+
+
+
+                        mapGeneratedImage.put(idForNewItem, new ParametersGeneratedImage(view, c_type, c_rotation, c_color, c_x_start, c_y_start, c_x, c_y));
+
+                        relativeMoveLayout.addView(view);
+
+                        view.setOnClickListener(DrawingActivity.this);
+                        view.setOnTouchListener(DrawingActivity.this);
+                        idForNewItem++;
+                    } while (cursor.moveToNext());
+                }
+
+
+
+
+
+                cursor.close();
+            }
+        });
+
 
     // хранится тип и количество данного типа
         mapForNewNote = new SparseArrayCompat<Integer>();
@@ -156,6 +229,7 @@ public class DrawingActivity extends AppCompatActivity
         }else if (id == R.id.colorNone){
             if (IsInMap()){
                 ((ImageView)mapGeneratedImage.get(markIdImage).view).setColorFilter(null);
+                mapGeneratedImage.get(markIdImage)._color = -1;
             }
         }else if (id == R.id.colorBlue){
             SetFilterIcons(R.color.colorIconsBlue);
@@ -183,6 +257,8 @@ public class DrawingActivity extends AppCompatActivity
                 mapGeneratedImage.get(id).coordinateX = X - lParams.leftMargin;
                 mapGeneratedImage.get(id).coordinateY = Y - lParams.topMargin;
 
+                /*mapGeneratedImage.get(id).startPosX = lParams.leftMargin;
+                mapGeneratedImage.get(id).startPosY = lParams.topMargin;*/
 
                 leftX = imageDel.getLeft();
                 bottomY = imageDel.getBottom();
@@ -197,6 +273,8 @@ public class DrawingActivity extends AppCompatActivity
                 layoutParams.topMargin = Y - mapGeneratedImage.get(id).coordinateY;
                 layoutParams.bottomMargin = 0 - (int)1e5 ;
                 layoutParams.rightMargin = 0 - (int)1e5 ;
+                mapGeneratedImage.get(id).startPosX = layoutParams.leftMargin;
+                mapGeneratedImage.get(id).startPosY = layoutParams.topMargin;
                 v.setLayoutParams(layoutParams);
                 xx = v.getRight();
                 yy = v.getTop();
@@ -341,12 +419,14 @@ public class DrawingActivity extends AppCompatActivity
                     return;
                 }
                 mapGeneratedImage.get(markIdImage).view.setRotation(mapGeneratedImage.get(markIdImage).view.getRotation() + 15);
+                mapGeneratedImage.get(markIdImage)._rotation = mapGeneratedImage.get(markIdImage).view.getRotation();
             }
         });
     }
     private void SetFilterIcons(int color){
         if (IsInMap()){
             ((ImageView)mapGeneratedImage.get(markIdImage).view).setColorFilter(getResources().getColor(color), PorterDuff.Mode.MULTIPLY);
+            mapGeneratedImage.get(markIdImage)._color = color;
         }
     }
     private boolean IsInMap(){
