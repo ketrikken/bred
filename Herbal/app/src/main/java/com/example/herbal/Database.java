@@ -280,6 +280,7 @@ public class Database {
             int yy = cursorr.getColumnIndex(DBHelper.FIGURS_COORD_Y);
             int start_x = cursorr.getColumnIndex(DBHelper.FIGURS_START_COORD_X);
             int start_y = cursorr.getColumnIndex(DBHelper.FIGURS_START_COORD_Y);
+            int size = cursorr.getColumnIndex(DBHelper.FIGURS_SIZE);
             do {
                 Log.d("mLog", "ID = " + cursorr.getInt(idIndex) +
                         ", parent = " + cursorr.getString(parent) +
@@ -288,7 +289,8 @@ public class Database {
                         ", y = " + cursorr.getString(yy) +
                         ", start x = " + cursorr.getString(start_x) +
                         ", start y = " + cursorr.getString(start_y) +
-                        ", rotation = " + cursorr.getString(rotation));
+                        ", rotation = " + cursorr.getString(rotation) +
+                        ", size = " + cursorr.getString(size));
             } while (cursorr.moveToNext());
         } else
             Log.d("mLog","0 rows");
@@ -335,7 +337,8 @@ public class Database {
                 image.startPosX + ", "  +
                 image.startPosY  + ", "  +
                 image.coordinateX + ", "  +
-                image.coordinateY  +
+                image.coordinateY  + ", " +
+                image._size +
                 " )");
 
     }

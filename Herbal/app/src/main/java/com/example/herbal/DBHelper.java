@@ -15,7 +15,7 @@ import java.util.List;
 
     public class DBHelper extends SQLiteOpenHelper {
 
-        public static final int DATABASE_VERSION = 18;
+        public static final int DATABASE_VERSION = 19;
         public static final String DATABASE_NAME = "contactsDB";
 
         public static final String EXTERNAL_KEY_ID = "_id";
@@ -45,6 +45,7 @@ import java.util.List;
         public static final String FIGURS_COORD_Y = "coord_y";
         public static final String FIGURS_START_COORD_X = "start_coord_x";
         public static final String FIGURS_START_COORD_Y = "start_coord_y";
+        public static final String FIGURS_SIZE = "size";
 
        /* public DBHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -101,7 +102,8 @@ import java.util.List;
                 FIGURS_START_COORD_X + " INTEGER, " +
                 FIGURS_START_COORD_Y + " INTEGER, " +
                 FIGURS_COORD_X + " INTEGER, " +
-                FIGURS_COORD_Y + " INTEGER " +
+                FIGURS_COORD_Y + " INTEGER, " +
+                FIGURS_SIZE + " TEXT " +
                 " );");
         Log.d("mLog", " --- CREATE NOTE ---- ");
     }

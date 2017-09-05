@@ -94,7 +94,7 @@ public class DrawingActivity extends AppCompatActivity
                 database.printFigurs();
                 Cursor cursor = database.getAllDataFigurs();
 
-                // очистить все переменные
+                // очистить все переменные и поле
                 mapGeneratedImage.clear();
                 idForNewItem = 0;
                 /////////////////////////
@@ -110,7 +110,7 @@ public class DrawingActivity extends AppCompatActivity
                         int c_y_start = cursor.getInt(cursor.getColumnIndex(DBHelper.FIGURS_START_COORD_Y));
                         int c_x = cursor.getInt(cursor.getColumnIndex(DBHelper.FIGURS_COORD_X));
                         int c_y = cursor.getInt(cursor.getColumnIndex(DBHelper.FIGURS_COORD_Y));
-
+                        float c_size = cursor.getFloat(cursor.getColumnIndex(DBHelper.FIGURS_SIZE));
 
                         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(Constants.START_POSITION, Constants.START_POSITION);
                         View view = getLayoutInflater().inflate(R.layout.im_view, null);
@@ -122,12 +122,19 @@ public class DrawingActivity extends AppCompatActivity
                         layoutParams.topMargin = c_y_start;
                         layoutParams.bottomMargin = 0 - (int)1e5 ;
                         layoutParams.rightMargin = 0 - (int)1e5 ;
+                        if (c_size != 0){
+                            view.setScaleX(c_size);
+                            view.setScaleY(c_size);
+                        }
+                        if (c_color >= 0){
+                            ((ImageView)view).setColorFilter(getResources().getColor(c_color), PorterDuff.Mode.MULTIPLY);
+                        }
                         view.setLayoutParams(layoutParams);
 
 
 
 
-                        mapGeneratedImage.put(idForNewItem, new ParametersGeneratedImage(view, c_type, c_rotation, c_color, c_x_start, c_y_start, c_x, c_y));
+                        mapGeneratedImage.put(idForNewItem, new ParametersGeneratedImage(view, c_type, c_rotation, c_size, c_color, c_x_start, c_y_start, c_x, c_y));
 
                         relativeMoveLayout.addView(view);
 
@@ -257,16 +264,11 @@ public class DrawingActivity extends AppCompatActivity
                 mapGeneratedImage.get(id).coordinateX = X - lParams.leftMargin;
                 mapGeneratedImage.get(id).coordinateY = Y - lParams.topMargin;
 
-                /*mapGeneratedImage.get(id).startPosX = lParams.leftMargin;
-                mapGeneratedImage.get(id).startPosY = lParams.topMargin;*/
-
                 leftX = imageDel.getLeft();
                 bottomY = imageDel.getBottom();
 
                 break;
 
-            //ACTION_MOVE обрабатывает случившиеся в процессе прикосновения изменения, здесь
-            //содержится информация о последней точке, где находится объект после окончания действия прикосновения ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) v.getLayoutParams();
                 layoutParams.leftMargin = X - mapGeneratedImage.get(id).coordinateX;
@@ -473,6 +475,7 @@ public class DrawingActivity extends AppCompatActivity
 
                 mapGeneratedImage.get(markIdImage).view.setScaleX((float) (x+0.1));
                 mapGeneratedImage.get(markIdImage).view.setScaleY((float) (y+0.1));
+                mapGeneratedImage.get(markIdImage)._size = mapGeneratedImage.get(markIdImage).view.getScaleX();
             }
         });
 
@@ -490,6 +493,7 @@ public class DrawingActivity extends AppCompatActivity
 
                     mapGeneratedImage.get(markIdImage).view.setScaleX((float) (x-0.1));
                     mapGeneratedImage.get(markIdImage).view.setScaleY((float) (y-0.1));
+                    mapGeneratedImage.get(markIdImage)._size = mapGeneratedImage.get(markIdImage).view.getScaleX();
                 }
             }
         });
